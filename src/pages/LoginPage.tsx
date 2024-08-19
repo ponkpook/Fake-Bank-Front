@@ -1,5 +1,6 @@
 import React from "react";
-import user from "../assets/user.png";
+import { Link } from "react-router-dom"; // Import Link from react-router-dom
+import user from "../assets/user.png"; // Replace with the correct path to your user icon
 
 const LoginPage = () => {
   return (
@@ -48,9 +49,9 @@ const LoginPage = () => {
             <a href="#" className="text-black underline">
               Forgot password?
             </a>
-            <a href="/signup" className="text-black underline">
+            <Link to="/signup" className="text-black underline">
               New to Fake Bank? Register now!
-            </a>
+            </Link>
           </div>
         </div>
       </div>
