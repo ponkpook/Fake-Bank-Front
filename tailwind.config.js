@@ -26,6 +26,10 @@ module.exports = {
       xxxxl: "30px",
     },
     extend: {
+      fontFamily: {
+        prosto: ['"Prosto One"', "cursive"],
+        poppins: ["Poppins", "sans-serif"],
+      },
       colors: {
         primary: "#0f99a3",
         secondary: "#f152ff",
@@ -45,9 +49,11 @@ module.exports = {
         "orange-600": "#FE622E",
         "orange-800": "#FE5219",
         "orange-1200": "#8C3619",
-        "native-red": "#D40C48",
+        "native-red": "#E3432B",
         "native-blue": "#0C6DD2",
         "native-yellow": "#F7C926",
+        "native-milk": "#F2EDE3",
+        "bg-green": "#CBD6CC",
       },
       spacing: {
         xxs: "5px",
