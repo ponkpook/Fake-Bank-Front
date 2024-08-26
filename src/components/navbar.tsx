@@ -1,10 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 export function Navbar() {
   return (
     <nav className="bg-bg-green text-black p-space-10">
       <div className="container flex justify-between items-center">
-        {/* Logo 区域 */}
+        {/* Logo */}
         <div className="flex items-center space-x-2">
           <div className="bg-white p-2 rounded-full">
             <svg
@@ -25,42 +27,52 @@ export function Navbar() {
           <span className="font-bold text-xl">Fake Bank</span>
         </div>
 
-        {/* 导航链接 */}
+        {/* direction */}
         <div className="flex space-x-8">
-          <a
-            href="#"
-            className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              `rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
+                isActive ? "font-bold underline" : "font-light "
+              }`
+            }
           >
             My home
-          </a>
-          <a
-            href="#"
+          </NavLink>
+          <NavLink
+            to="/"
             className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
           >
             View accounts
-          </a>
-          <a
-            href="#"
+          </NavLink>
+          <NavLink
+            to="/"
             className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
           >
             Transfer
-          </a>
-          <a
-            href="#"
+          </NavLink>
+          <NavLink
+            to="/"
             className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
           >
             Transaction
-          </a>
+          </NavLink>
         </div>
 
-        {/* 登录和注册按钮 */}
+        {/* login signup */}
         <div className="flex space-x-4">
-          <button className="bg-transparent text-black rounded-full font-light px-space-4 py-space-2 shadow-lg  hover:bg-native-milk/50 transition">
+          <Link
+            to="/login"
+            className="bg-transparent text-black rounded-full font-light px-space-4 py-space-2 shadow-lg  hover:bg-native-milk/50 transition"
+          >
             Log In
-          </button>
-          <button className="bg-native-red rounded-full text-black font-light px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition">
+          </Link>
+          <Link
+            to="/signup"
+            className="bg-native-red rounded-full text-black font-light px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition"
+          >
             Sign Up
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
