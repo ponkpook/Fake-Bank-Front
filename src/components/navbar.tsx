@@ -50,8 +50,12 @@ export function Navbar() {
             View accounts
           </NavLink>
           <NavLink
-            to="/"
-            className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
+            to="/transfer"
+            className={({ isActive }) =>
+              `rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
+                isActive ? "font-bold underline" : "font-light "
+              }`
+            }
           >
             Transfer
           </NavLink>
