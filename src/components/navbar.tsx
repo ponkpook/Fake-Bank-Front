@@ -46,7 +46,7 @@ export function Navbar() {
             View accounts
           </NavLink>
           <NavLink
-            to="/"
+            to="/transfer"
             className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
           >
             Transfer

@@ -56,6 +56,7 @@ module.exports = {
         "bg-green": "#CBD6CC",
         "light-green": "#DDE4DE",
         "teal-green": "#5E9C96",
+        "pale-mint": "#F0F3F0",
       },
       spacing: {
         xxs: "5px",
