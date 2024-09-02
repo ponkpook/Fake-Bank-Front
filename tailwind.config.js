@@ -57,6 +57,7 @@ module.exports = {
         "light-green": "#DDE4DE",
         "teal-green": "#5E9C96",
         "pale-mint": "#F0F3F0",
+        "light-grey": "#D9D9D9",
       },
       spacing: {
         xxs: "5px",

@@ -28,7 +28,7 @@ export const Transfer: React.FC = () => {
 
   return (
     <Container>
-      <div className="flex justify-center mb-6 space-x-4">
+      <div className="flex justify-center space-x-4">
         <NavLink
           to="#"
           className={`w-72 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
@@ -73,7 +73,9 @@ export const Transfer: React.FC = () => {
         </NavLink>
       </div>
 
-      <div className="component-display">{renderComponent()}</div>
+      <div className="component-display w-[1200px] mx-auto">
+        {renderComponent()}
+      </div>
     </Container>
   );
 };
