@@ -89,7 +89,7 @@ export const TransferToOthers: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="mb-20">
+            <div className="mb-10">
               <div className="text-black text-base font-normal font-['Poppins'] mb-space-4">
                 Transfer amount:
               </div>
