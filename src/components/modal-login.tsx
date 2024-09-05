@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export const ModalLogin = () => {
   return (
     <div className="flex flex-row w-[90%] rounded-m mx-auto bg-native-milk shadow-lg">
-      <div className="flex w-[40%] bg-light-green justify-center gap-space-10 flex-col rounded-l-m h-[800px]">
+      <div className="flex w-[40%] bg-light-green justify-center gap-space-10 flex-col rounded-l-m min-h-[800px]">
         <div className="pb-space-10 flex justify-center">
           <img
             src="./assets/person-icon.png"
