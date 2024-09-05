@@ -20,17 +20,12 @@ export const Homepage = () => {
           />
         </div>
       </div>
-      <div className="flex items-center justify-center">
-        <img
-          src="./assets/ellipsis.png"
-          alt="ellipsis background"
-          className="z-0 fixed bottom-0"
-        />
-        <h2 className="relative z-3 font-prosto text-xxxl">
-          Benefits of Fake-Bank Internet Banking
-        </h2>
-      </div>
-      <div className="flex items-center justify-center">
+      <div className="flex flex-col items-center justify-center bg-native-milk py-space-10 rounded-s">
+        <div>
+          <h2 className="relative z-3 font-prosto text-xxxl">
+            Benefits of Fake-Bank Internet Banking
+          </h2>
+        </div>
         <div className="grid justify-center grid-cols-3 z-3 gap-[250px] pt-[60px]">
           <div className="flex flex-col gap-space-10 justify-center items-center">
             <img
