@@ -105,6 +105,7 @@ export const TransferBetweenAccounts: React.FC = () => {
                 placeholder="Enter amount"
                 value={transferAmount} // Use the new state variable for amount
                 onChange={(e) => setTransferAmount(e.target.value)}
+                disabled={!selectedAccount} // 禁用直到选择了账户
               />
             </div>
             <button className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
