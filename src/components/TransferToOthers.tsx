@@ -1,19 +1,16 @@
 import React, { useState } from "react";
+import NewPayeePopup from './NewPayeePopup';
 
 export const TransferToOthers: React.FC = () => {
   const accounts = ["Smart Access", "NetBank Saver"];
   const existingPayees = ["Payee1", "Payee2"];
-  
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>("");
-
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState<boolean>(false);
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] = useState<boolean>(false);
-  const [isNewPayee, setIsNewPayee] = useState<boolean>(false); // Toggle between new/existing payee
-  const [newPayeeName, setNewPayeeName] = useState<string>("");
-  const [newPayeeBSB, setNewPayeeBSB] = useState<string>("");
-  const [newPayeeAccountNumber, setNewPayeeAccountNumber] = useState<string>("");
+  const [isNewPayee, setIsNewPayee] = useState<boolean>(false); // State to control modal visibility
+
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -67,67 +64,31 @@ export const TransferToOthers: React.FC = () => {
           <div className="relative p-space-4">
             <div className="mb-16">
               <div className="text-black text-base font-normal font-['Poppins'] mb-space-4 mt-space-4">
-                To:
+                Transfer to:
               </div>
-              {isNewPayee ? (
-                // Fields for new payee
-                <div>
-                  <input
-                    type="text"
-                    className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2 mb-4"
-                    placeholder="Enter Account Name"
-                    value={newPayeeName}
-                    onChange={(e) => setNewPayeeName(e.target.value)}
-                    disabled={!selectedAccount} // 禁用直到选择了账户
-                  />
-                  <input
-                    type="text"
-                    className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2 mb-4"
-                    placeholder="Enter BSB"
-                    value={newPayeeBSB}
-                    onChange={(e) => setNewPayeeBSB(e.target.value)}
-                    disabled={!selectedAccount} // 禁用直到选择了账户
-                  />
-                  <input
-                    type="text"
-                    className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
-                    placeholder="Enter Account Number"
-                    value={newPayeeAccountNumber}
-                    onChange={(e) => setNewPayeeAccountNumber(e.target.value)}
-                    disabled={!selectedAccount} // 禁用直到选择了账户
-                  />
-                </div>
-              ) : (
-                // Dropdown for existing payees
-                <div className="w-full h-l bg-gray-200 flex items-center justify-between px-space-4 relative">
-                  <button
-                    className={`w-full text-left ${
-                      selectedTransferTo ? "text-black" : "text-grey-800"
-                    }`}
-                    onClick={() =>
-                      setIsTransferToDropdownOpen(!isTransferToDropdownOpen)
-                    }
-                    disabled={!selectedAccount} // 禁用按钮直到选择了账户
-                  >
-                    {selectedTransferTo || "Select Existing Payee"}
-                  </button>
-                  {isTransferToDropdownOpen && (
-                    <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
-                      {existingPayees.map((payee) => (
-                        <button
-                          key={payee}
-                          className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                          onClick={() => handleTransferToChange(payee)}
-                        >
-                          {payee}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              )}
+              <div className="w-full h-l bg-gray-200 rounded flex items-center justify-between px-space-4 relative">
+                <button
+                  className={`w-full text-left ${selectedTransferTo ? "text-black" : "text-grey-800"}`}
+                  onClick={() => setIsTransferToDropdownOpen(!isTransferToDropdownOpen)}
+                  disabled={!selectedAccount} // Disable button until an account is selected
+                >
+                  {selectedTransferTo || "Select Existing Payee"}
+                </button>
+                {isTransferToDropdownOpen && (
+                  <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
+                    {existingPayees.map((payee) => (
+                      <button
+                        key={payee}
+                        className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => handleTransferToChange(payee)}
+                      >
+                        {payee}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
-
             <div className="mb-20">
               <div className="text-black text-base font-normal font-['Poppins'] mb-space-4">
                 Transfer amount:
@@ -139,18 +100,17 @@ export const TransferToOthers: React.FC = () => {
                 placeholder="Enter amount"
                 value={transferAmount}
                 onChange={(e) => setTransferAmount(e.target.value)}
-                disabled={!selectedAccount} // 禁用直到选择了账户
+                disabled={!selectedAccount} // Disable until an account is selected
               />
             </div>
-
-            <div className="flex justify-end space-x-4">
+            <div className="flex justify-end space-x-4 ">
               <button
                 className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
-                onClick={() => setIsNewPayee(!isNewPayee)}
+                onClick={() => setIsNewPayee(true)} // Show the popup
+                disabled={!selectedAccount}
               >
                 {isNewPayee ? "Pay existing payee?" : "Pay someone new?"}
               </button>
-
               <button className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
                 Confirm payment
               </button>
@@ -158,6 +118,28 @@ export const TransferToOthers: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Popup for new payee */}
+      <NewPayeePopup isOpen={isNewPayee} onClose={() => setIsNewPayee(false)}>
+        <h2 className="text-xl font-semibold mb-4">Enter New Payee Information</h2>
+        <form>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Name:</label>
+            <input type="text" className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2" placeholder="Enter payee name" />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">BSB:</label>
+            <input type="text" className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2" placeholder="Enter BSB number" />
+          </div>
+          <div className="mb-4">
+            <label className="block text-sm font-medium mb-2">Account Number:</label>
+            <input type="text" className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2" placeholder="Enter account number" />
+          </div>
+          <button type="submit" className="bg-native-red text-white py-2 px-4 rounded-full">
+            Save Payee
+          </button>
+        </form>
+      </NewPayeePopup>
     </div>
   );
 };
