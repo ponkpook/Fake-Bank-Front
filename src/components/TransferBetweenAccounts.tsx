@@ -26,17 +26,19 @@ export const TransferBetweenAccounts: React.FC = () => {
   );
 
   return (
-    <div className="flex w-[1200px] justify-center p-space-8 bg-light-green">
+    <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
       <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
-        {/* 左侧面板 */}
+        {/* Left Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
-            <div className="text-black text-base font-normal font-['Poppins'] mb-space-4 mt-space-4">
+            <div className="text-black text-l font-normal font-['Poppins'] mb-space-4 mt-space-4">
               Select your account:
             </div>
-            <div className="w-full h-l bg-gray-200 rounded flex items-center justify-between px-space-4 relative">
+            <div className="w-full h-l bg-gray-200 flex items-center justify-between px-space-4 relative">
               <button
-                className="text-grey-800 w-full text-left"
+                className={`w-full text-left ${
+                  selectedAccount ? "text-black" : "text-grey-800"
+                }`}
                 onClick={() => setIsAccountDropdownOpen(!isAccountDropdownOpen)}
               >
                 {selectedAccount || "Select Account"}
@@ -58,7 +60,7 @@ export const TransferBetweenAccounts: React.FC = () => {
           </div>
         </div>
 
-        {/* 右侧面板 */}
+        {/* Right Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
             <div className="mb-16">
@@ -67,7 +69,9 @@ export const TransferBetweenAccounts: React.FC = () => {
               </div>
               <div className="w-full h-l bg-gray-200 rounded flex items-center justify-between px-space-4 relative">
                 <button
-                  className="text-grey-800 w-full text-left"
+                  className={`w-full text-left ${
+                    selectedAccount ? "text-black" : "text-grey-800"
+                  }`}
                   onClick={() =>
                     setIsTransferToDropdownOpen(!isTransferToDropdownOpen)
                   }
@@ -96,7 +100,7 @@ export const TransferBetweenAccounts: React.FC = () => {
               </div>
               <input
                 type="number"
-                min="0.00" // 确保输入的值至少为0.01
+                min="0.01" // minimum transfer amount set to 0.01 dollar
                 className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                 placeholder="Enter amount"
                 value={transferAmount} // Use the new state variable for amount
