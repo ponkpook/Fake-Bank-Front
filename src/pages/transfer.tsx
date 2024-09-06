@@ -4,22 +4,19 @@ import { TransferBetweenAccounts } from "../components/TransferBetweenAccounts";
 import { TransferToOthers } from "../components/TransferToOthers";
 import { BPay } from "../components/BPay";
 import { RecurringPayments } from "../components/RecurringPayments";
-import { NavLink } from "react-router-dom";
 
 export const Transfer: React.FC = () => {
-  const [activeComponent, setActiveComponent] = useState<string>(
-    "TransferBetweenAccounts"
-  );
+  const [activeComponent, setActiveComponent] = useState<number>(0);
 
   const renderComponent = () => {
     switch (activeComponent) {
-      case "TransferBetweenAccounts":
+      case 0:
         return <TransferBetweenAccounts />;
-      case "TransferToOthers":
+      case 1:
         return <TransferToOthers />;
-      case "BPay":
+      case 2:
         return <BPay />;
-      case "RecurringPayments":
+      case 3:
         return <RecurringPayments />;
       default:
         return <TransferBetweenAccounts />;
@@ -29,48 +26,38 @@ export const Transfer: React.FC = () => {
   return (
     <Container>
       <div className="flex justify-center space-x-4">
-        <NavLink
-          to="#"
+        <button
           className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
-            activeComponent === "TransferBetweenAccounts"
-              ? "font-bold underline"
-              : "font-light"
+            activeComponent === 0 ? "font-bold underline" : "font-light"
           }`}
-          onClick={() => setActiveComponent("TransferBetweenAccounts")}
+          onClick={() => setActiveComponent(0)}
         >
           Transfer Between Own Accounts
-        </NavLink>
-        <NavLink
-          to="#"
+        </button>
+        <button
           className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
-            activeComponent === "TransferToOthers"
-              ? "font-bold underline"
-              : "font-light"
+            activeComponent === 1 ? "font-bold underline" : "font-light"
           }`}
-          onClick={() => setActiveComponent("TransferToOthers")}
+          onClick={() => setActiveComponent(1)}
         >
           Pay to Others
-        </NavLink>
-        <NavLink
-          to="#"
+        </button>
+        <button
           className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
-            activeComponent === "BPay" ? "font-bold underline" : "font-light"
+            activeComponent === 2 ? "font-bold underline" : "font-light"
           }`}
-          onClick={() => setActiveComponent("BPay")}
+          onClick={() => setActiveComponent(2)}
         >
           BPay
-        </NavLink>
-        <NavLink
-          to="#"
+        </button>
+        <button
           className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
-            activeComponent === "RecurringPayments"
-              ? "font-bold underline"
-              : "font-light"
+            activeComponent === 3 ? "font-bold underline" : "font-light"
           }`}
-          onClick={() => setActiveComponent("RecurringPayments")}
+          onClick={() => setActiveComponent(3)}
         >
           Recurring Payments
-        </NavLink>
+        </button>
       </div>
 
       <div className="component-display max-w-[1328px] mx-auto">

@@ -19,7 +19,7 @@ export const ModalAccounts: React.FC<IAccount> = ({ accounts }) => {
         <h1 className="font-prosto text-xxxl">Welcome Back</h1>
       </div>
       {accounts.map((account, index) => (
-        <div className="flex w-full bg-light-white justify-between rounded-s items-center py-space-2">
+        <div className="flex w-full bg-pale-mint justify-between rounded-s items-center py-space-2">
           <div className="flex flex-row justify-start gap-space-5 items-center">
             <div>
               <img
