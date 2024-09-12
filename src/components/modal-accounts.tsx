@@ -10,16 +10,23 @@ type Account = {
 
 type IAccount = {
   accounts: Account[];
+  onAddAccount: () => void;
 };
 
-export const ModalAccounts: React.FC<IAccount> = ({ accounts }) => {
+export const ModalAccounts: React.FC<IAccount> = ({
+  accounts,
+  onAddAccount,
+}) => {
   return (
     <div className="flex flex-col gap-space-5 w-full px-[60px]">
       <div>
         <h1 className="font-prosto text-xxxl">Welcome Back</h1>
       </div>
       {accounts.map((account, index) => (
-        <div className="flex w-full bg-pale-mint justify-between rounded-s items-center py-space-2">
+        <div
+          key={index}
+          className="flex w-full bg-pale-mint justify-between rounded-s items-center py-space-2"
+        >
           <div className="flex flex-row justify-start gap-space-5 items-center">
             <div>
               <img
@@ -46,7 +53,15 @@ export const ModalAccounts: React.FC<IAccount> = ({ accounts }) => {
           </div>
         </div>
       ))}
-      <div>top up</div>
+      {/* add accounts buttom */}
+      <div className="mt-space-6">
+        <button
+          onClick={onAddAccount}
+          className="bg-teal-green text-white font-poppins px-4 py-2 rounded-m"
+        >
+          Add One More Saving Account
+        </button>
+      </div>
     </div>
   );
 };

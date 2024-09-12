@@ -6,12 +6,30 @@ import { BPay } from "../components/BPay";
 import { RecurringPayments } from "../components/RecurringPayments";
 
 export const Transfer: React.FC = () => {
+  // 初始化账户列表
+  const [accounts, setAccounts] = useState([
+    {
+      name: "Everyday",
+      bsb: "010-010",
+      accNo: "1234 5678",
+      balance: "$100.00",
+    },
+    {
+      name: "Saving",
+      bsb: "010-010",
+      accNo: "8765 4321",
+      balance: "$1000.00",
+    },
+  ]);
+
   const [activeComponent, setActiveComponent] = useState<number>(0);
 
+  // 动态渲染不同的组件
   const renderComponent = () => {
     switch (activeComponent) {
       case 0:
-        return <TransferBetweenAccounts />;
+        // 将 accounts 传递给 TransferBetweenAccounts
+        return <TransferBetweenAccounts accounts={accounts} />;
       case 1:
         return <TransferToOthers />;
       case 2:
@@ -19,7 +37,7 @@ export const Transfer: React.FC = () => {
       case 3:
         return <RecurringPayments />;
       default:
-        return <TransferBetweenAccounts />;
+        return <TransferBetweenAccounts accounts={accounts} />;
     }
   };
 
