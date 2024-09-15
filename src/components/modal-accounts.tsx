@@ -1,4 +1,3 @@
-// ModalAccounts.tsx
 import React from 'react';
 import AnimatedCounter from './AnimatedCounter';
 import BalanceChart from './BalanceChart';
@@ -25,6 +24,12 @@ export const ModalAccounts: React.FC<IAccount> = ({
     balance: Number(account.balance) || 0,
     name: account.name || 'Unknown',
   }));
+
+  // Calculate the total current balance
+  const totalCurrentBalance = accounts.reduce((total, account) => {
+    const balance = Number(account.balance) || 0;
+    return total + balance;
+  }, 0);
 
   return (
     <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg mt-10 rounded-m">
@@ -70,10 +75,26 @@ export const ModalAccounts: React.FC<IAccount> = ({
       </div>
 
       {/* Right Section: Chart and Image */}
-      <div className="hidden flex-col md:flex md:w-[40%] items-center justify-center p-5">
-        {/* Left section: Chart */}
+      <div className="hidden md:flex flex-col md:w-[40%] items-center justify-center p-5">
+        {/* Chart */}
         <div className="total-balance-chart flex justify-center items-center">
           <BalanceChart accounts={chartData} />
+        </div>
+        {/* Text and Image */}
+        <div className='flex flex-col gap-6 flex-1'>
+          <h2 className='font-prosto text-xxl text-center mt-2'>
+            Bank Accounts: {accounts.length}
+          </h2>
+          <div className='font-prosto text-xxl text-center'>
+            <p className='font-prosto '>
+              Total Blance: 
+              <div className='font-prosto text-xl text-center'>
+                {/* Needs update */}
+              <AnimatedCounter amount={1000} /> 
+            </div>
+            </p>
+            
+          </div>
         </div>
         <img
           src="assets/old-person.png"
@@ -83,7 +104,7 @@ export const ModalAccounts: React.FC<IAccount> = ({
       </div>
 
       {/* Mobile Image Section */}
-      <div className="md:hidden flex justify-center mt-5">
+      <div className="md:hidden flex flex-col justify-center items-center mt-5">
         <div className="total-balance-chart flex justify-center items-center">
           <BalanceChart accounts={chartData} />
         </div>
@@ -96,3 +117,4 @@ export const ModalAccounts: React.FC<IAccount> = ({
     </div>
   );
 };
+
