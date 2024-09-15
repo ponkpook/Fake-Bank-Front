@@ -20,7 +20,7 @@ export const Homepage = () => {
           />
         </div>
       </div>
-      <div className="flex flex-col items-center justify-center bg-native-milk py-space-10 rounded-s">
+      <div className="flex flex-col items-center justify-center bg-native-milk py-space-10 rounded-s mt-20">
         <div>
           <h2 className="relative z-3 font-prosto text-xxxl">
             Benefits of Fake-Bank Internet Banking
