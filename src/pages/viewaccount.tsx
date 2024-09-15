@@ -49,16 +49,16 @@ export const Viewaccount = () => {
     <Container>
       <div>
         <div className="flex flex-row">
-          <div className="flex w-[60%]">
+          <div className="flex w-[100%]">
             <ModalAccounts accounts={accounts} onAddAccount={addAccount} />
           </div>
-          <div className="flex flex-[1]">
+          {/* <div className="flex flex-[1]">
             <img
               src="assets/old-person.png"
               alt="person-interact"
               className="w-[347px] pt-space-6"
             />
-          </div>
+          </div> */}
         </div>
       </div>
     </Container>
