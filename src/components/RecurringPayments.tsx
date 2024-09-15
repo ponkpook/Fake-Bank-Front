@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
+import { IAccount } from "../type";
 
-export const RecurringPayments: React.FC = () => {
-  const accounts = ["Smart Access", "NetBank Saver"];
+interface RecurringPaymentsProps {
+  accounts: IAccount[];
+}
+
+export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
+  accounts,
+}) => {
   const existingPayees = ["Payee1", "Payee2"];
   const frequencyOption = ["Every week", "Every fortnight", "Every 6 months"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
@@ -55,11 +61,12 @@ export const RecurringPayments: React.FC = () => {
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {accounts.map((account) => (
                     <button
-                      key={account}
+                      key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account)}
+                      onClick={() => handleAccountChange(account.name)}
                     >
-                      {account}
+                      {account.name} (BSB: {account.bsb}, Account:{" "}
+                      {account.accNo})
                     </button>
                   ))}
                 </div>

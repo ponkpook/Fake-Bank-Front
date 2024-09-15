@@ -1,7 +1,12 @@
 import React, { useState } from "react";
+import { IAccount } from "../type";
 
-export const BPay: React.FC = () => {
-  const accounts = ["Smart Access", "NetBank Saver"];
+interface BPayProps {
+  accounts: IAccount[];
+}
+
+export const BPay: React.FC<BPayProps> = ({ accounts }) => {
+  //const accounts = ["Smart Access", "NetBank Saver"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>(""); // Separate state for transfer amount
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
@@ -11,7 +16,6 @@ export const BPay: React.FC = () => {
     setSelectedAccount(account);
     setIsAccountDropdownOpen(false);
   };
-
 
   return (
     <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
@@ -35,11 +39,12 @@ export const BPay: React.FC = () => {
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {accounts.map((account) => (
                     <button
-                      key={account}
+                      key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account)}
+                      onClick={() => handleAccountChange(account.name)}
                     >
-                      {account}
+                      {account.name} (BSB: {account.bsb}, Account:{" "}
+                      {account.accNo})
                     </button>
                   ))}
                 </div>
@@ -56,13 +61,13 @@ export const BPay: React.FC = () => {
                 Biller Name:
               </div>
               <input
-                  type="text"
-                  className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
-                  placeholder="Enter biller Name"
-                  disabled={!selectedAccount}
-                />
+                type="text"
+                className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
+                placeholder="Enter biller Name"
+                disabled={!selectedAccount}
+              />
             </div>
-            
+
             <div className="flex mb-8">
               <div className="flex-1">
                 <div className="text-black text-base font-normal font-['Poppins'] mb-space-4 mt-space-4">
@@ -111,4 +116,3 @@ export const BPay: React.FC = () => {
     </div>
   );
 };
-
