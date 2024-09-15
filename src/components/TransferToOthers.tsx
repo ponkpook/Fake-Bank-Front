@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
 
-export const TransferToOthers: React.FC = () => {
-  const accounts = ["Smart Access", "NetBank Saver"];
+interface TransferToOthersProps {
+  accounts: {
+    name: string;
+    bsb: string;
+    accNo: string;
+    balance: string;
+  }[];
+}
+
+export const TransferToOthers: React.FC<TransferToOthersProps> = ({
+  accounts,
+}) => {
+  //const accounts = ["Smart Access", "NetBank Saver"];
   const existingPayees = ["Payee1", "Payee2"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
@@ -46,11 +57,12 @@ export const TransferToOthers: React.FC = () => {
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {accounts.map((account) => (
                     <button
-                      key={account}
+                      key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account)}
+                      onClick={() => handleAccountChange(account.name)}
                     >
-                      {account}
+                      {account.name} (BSB: {account.bsb}, Account:{" "}
+                      {account.accNo})
                     </button>
                   ))}
                 </div>

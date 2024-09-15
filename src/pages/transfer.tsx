@@ -1,26 +1,39 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import { TransferBetweenAccounts } from "../components/TransferBetweenAccounts";
 import { TransferToOthers } from "../components/TransferToOthers";
 import { BPay } from "../components/BPay";
 import { RecurringPayments } from "../components/RecurringPayments";
+import { IAccount } from "../type";
+import { accountsKey } from "./viewaccount";
 
 export const Transfer: React.FC = () => {
   // 初始化账户列表
-  const [accounts, setAccounts] = useState([
-    {
-      name: "Everyday",
-      bsb: "010-010",
-      accNo: "1234 5678",
-      balance: "$100.00",
-    },
-    {
-      name: "Saving",
-      bsb: "010-010",
-      accNo: "8765 4321",
-      balance: "$1000.00",
-    },
-  ]);
+  useEffect(() => {
+    let storageAccounts = localStorage.getItem(accountsKey);
+    if (storageAccounts) {
+      setAccounts(JSON.parse(storageAccounts));
+    } else {
+      setAccounts([
+        {
+          name: "Everyday",
+          bsb: "010-010",
+          accNo: "1234 5678",
+          image: "/assets/section1.png",
+          balance: "$100.00",
+        },
+        {
+          name: "Saving",
+          bsb: "010-010",
+          accNo: "1234 5678",
+          image: "/assets/section2.png",
+          balance: "$1000.00",
+        },
+      ]);
+    }
+  }, []);
+
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   const [activeComponent, setActiveComponent] = useState<number>(0);
 
@@ -31,11 +44,11 @@ export const Transfer: React.FC = () => {
         // 将 accounts 传递给 TransferBetweenAccounts
         return <TransferBetweenAccounts accounts={accounts} />;
       case 1:
-        return <TransferToOthers />;
+        return <TransferToOthers accounts={accounts} />;
       case 2:
-        return <BPay />;
+        return <BPay accounts={accounts} />;
       case 3:
-        return <RecurringPayments />;
+        return <RecurringPayments accounts={accounts} />;
       default:
         return <TransferBetweenAccounts accounts={accounts} />;
     }
