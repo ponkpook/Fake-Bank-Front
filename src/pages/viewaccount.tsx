@@ -3,11 +3,11 @@ import { Container } from "../components/container";
 import { ModalAccounts } from "../components/modal-accounts";
 import { IAccount } from "../type";
 
-export const accountsKey = "accounts"; // string
+export const userID = "accounts"; // string
 
 export const Viewaccount = () => {
   useEffect(() => {
-    let storageAccounts = localStorage.getItem(accountsKey);
+    let storageAccounts = localStorage.getItem(userID);
     if (storageAccounts) {
       setAccounts(JSON.parse(storageAccounts));
     } else {
@@ -43,7 +43,7 @@ export const Viewaccount = () => {
       return account;
     });
     setAccounts(updatedAccounts);
-    localStorage.setItem(accountsKey, JSON.stringify(updatedAccounts)); // 更新 localStorage
+    localStorage.setItem(userID, JSON.stringify(updatedAccounts)); // 更新 localStorage
   };
 
   const addAccount = () => {
@@ -58,7 +58,7 @@ export const Viewaccount = () => {
     const newAccounts = [...accounts, newAccount];
     setAccounts(newAccounts);
 
-    localStorage.setItem(accountsKey, JSON.stringify(newAccounts));
+    localStorage.setItem(userID, JSON.stringify(newAccounts));
   };
 
   return (

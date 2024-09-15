@@ -5,12 +5,12 @@ import { TransferToOthers } from "../components/TransferToOthers";
 import { BPay } from "../components/BPay";
 import { RecurringPayments } from "../components/RecurringPayments";
 import { IAccount } from "../type";
-import { accountsKey } from "./viewaccount";
+import { userID } from "./viewaccount";
 
 export const Transfer: React.FC = () => {
   // 初始化账户列表
   useEffect(() => {
-    let storageAccounts = localStorage.getItem(accountsKey);
+    let storageAccounts = localStorage.getItem(userID);
     if (storageAccounts) {
       setAccounts(JSON.parse(storageAccounts));
     } else {
