@@ -4,11 +4,13 @@ import { IAccount } from "../type";
 type ModalAccountsProps = {
   accounts: IAccount[];
   onAddAccount: () => void;
+  onTopUp: (index: number, amount: number) => void;
 };
 
 export const ModalAccounts: React.FC<ModalAccountsProps> = ({
   accounts,
   onAddAccount,
+  onTopUp,
 }) => {
   return (
     <div className="flex flex-col gap-space-5 w-full px-[60px]">
@@ -37,11 +39,23 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
             </div>
           </div>
           <div className="flex flex-col px-space-10">
-            <div className="flex justify-center">
-              <span className="font-poppins font-bold">Balance</span>
-            </div>
-            <div className="flex justify-start">
-              <span className="font-poppins">{account.balance}</span>
+            <div className="flex items-center space-x-4">
+              {/* 显示余额 */}
+              <div className="flex flex-col">
+                <div className="flex justify-center">
+                  <span className="font-poppins font-bold">Balance</span>
+                </div>
+                <div className="flex justify-start">
+                  <span className="font-poppins">{account.balance}</span>
+                </div>
+              </div>
+              {/* 新增充值按钮，放在余额的右边，调整大小 */}
+              <button
+                onClick={() => onTopUp(index, 100)} // 点击按钮充值100
+                className="bg-teal-green text-white font-poppins px-3 py-1 text-sm rounded-m"
+              >
+                Top Up $100
+              </button>
             </div>
           </div>
         </div>
