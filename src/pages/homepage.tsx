@@ -1,25 +1,21 @@
 import React from "react";
-
 import { LoginSection } from "../components/login-section";
 import { Container } from "../components/container";
+import CarouselsImage from "../components/CarouselsImage";
 
 export const Homepage = () => {
   return (
     <Container>
       <div className="flex flex-col md:flex-row justify-center pt-[80px] gap-[100px]">
-        {/* Left half: Login Section */}
-        <div className="flex justify-center w-full md:w-auto">
+      {/* Left half: Login Section */}
+      <div className="flex justify-center w-full md:w-auto">
           <LoginSection />
-        </div>
-        {/* Right half: Image */}
-        <div className="flex justify-center w-full md:w-auto">
-          <img
-            src="./assets/homepage-img.png"
-            alt="homepage"
-            className="w-[500px] h-[500px] z-1"
-          />
-        </div>
       </div>
+      {/* Right half: Carousel Section */}
+      <div className="flex justify-center w-full md:w-[550px]"> {/* Set a fixed width for carousel */}
+          <CarouselsImage />
+      </div>
+    </div>
 
       {/* Lower Section: Slogan */}
       <div className="flex flex-col items-center justify-center bg-native-milk py-space-10 rounded-s mt-20">
