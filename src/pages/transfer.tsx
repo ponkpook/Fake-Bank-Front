@@ -37,10 +37,12 @@ export const Transfer: React.FC = () => {
 
   const [activeComponent, setActiveComponent] = useState<number>(0);
 
+  // 动态渲染不同的组件
   const renderComponent = () => {
     switch (activeComponent) {
       case 0:
-        return <TransferBetweenAccounts />;
+        // 将 accounts 传递给 TransferBetweenAccounts
+        return <TransferBetweenAccounts accounts={accounts} />;
       case 1:
         return <TransferToOthers accounts={accounts} />;
       case 2:
@@ -48,7 +50,7 @@ export const Transfer: React.FC = () => {
       case 3:
         return <RecurringPayments accounts={accounts} />;
       default:
-        return <TransferBetweenAccounts />;
+        return <TransferBetweenAccounts accounts={accounts} />;
     }
   };
 

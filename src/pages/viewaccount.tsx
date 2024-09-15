@@ -50,7 +50,7 @@ export const Viewaccount = () => {
       <div>
         <div className="flex flex-row">
           <div className="flex w-[60%]">
-            <ModalAccounts accounts={accounts} />
+            <ModalAccounts accounts={accounts} onAddAccount={addAccount} />
           </div>
           <div className="flex flex-[1]">
             <img
