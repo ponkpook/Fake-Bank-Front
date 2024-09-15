@@ -40,7 +40,7 @@ export const ModalLogin = () => {
         <div className="pb-space-10 flex justify-center">
           <img
             src="./assets/person-icon.png"
-            alt="person=icon"
+            alt="person-icon"
             className="w-[155px] h-[155px]"
           />
         </div>
