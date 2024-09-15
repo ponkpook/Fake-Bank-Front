@@ -31,7 +31,7 @@ const NavMenu: React.FC<NavMenuProps> = ({ isMenuOpen, isLoggedIn }) => {
           </>
         ) : (
           <Link
-            to="/homepage"
+            to="/"
             className="block bg-native-red rounded-full text-black font-light px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition"
           >
             Sign Off
