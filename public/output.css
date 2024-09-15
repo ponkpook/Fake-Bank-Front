@@ -934,3 +934,8 @@ video {
 .hover\:underline:hover{
   text-decoration-line: underline;
 }
+
+.nav-bg-green{
+  --tw-bg-opacity: 1;
+  background-color: rgb(203 214 204 / var(--tw-bg-opacity));
+}
