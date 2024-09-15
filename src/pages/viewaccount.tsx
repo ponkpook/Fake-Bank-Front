@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "../components/container";
+import { Container } from "../components/Container";
 import { ModalAccounts } from "../components/modal-accounts";
 import { IAccount } from "../type";
 

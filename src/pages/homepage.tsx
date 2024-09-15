@@ -1,6 +1,6 @@
 import React from "react";
 import { LoginSection } from "../components/login-section";
-import { Container } from "../components/container";
+import { Container } from "../components/Container";
 import CarouselsImage from "../components/CarouselsImage";
 
 export const Homepage = () => {

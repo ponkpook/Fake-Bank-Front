@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-const SignUpAndInItem: React.FC = () => {
+const SignUpAndInButtons: React.FC = () => {
     return (
         <div className="hidden md:flex space-x-4">
         <Link
@@ -20,4 +20,4 @@ const SignUpAndInItem: React.FC = () => {
     );
 };
 
-export default SignUpAndInItem;
+export default SignUpAndInButtons;
