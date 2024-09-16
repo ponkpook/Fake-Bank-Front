@@ -12,7 +12,7 @@ const TotalBalanceBox: React.FC<TotalBalanceBoxProps> = ({ accounts }) => {
   }, 0);
 
   return (
-    <div className="bg-pale-mint w-full max-w-xs md:max-w-md lg:max-w-lg p-space-6 rounded-s shadow-lg">
+    <div className="bg-pale-mint w-full p-space-6 rounded-s shadow-lg">
       <div className="flex flex-col gap-2">
         <div className="flex justify-between">
           <span className="font-poppins font-bold">Bank Accounts:</span>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "../components/container";
+import { Container } from "../components/Container";
 import { TransferBetweenAccounts } from "../components/TransferBetweenAccounts";
 import { TransferToOthers } from "../components/TransferToOthers";
 import { BPay } from "../components/BPay";
