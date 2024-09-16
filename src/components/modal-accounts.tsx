@@ -1,26 +1,22 @@
 import React from 'react';
 import AnimatedCounter from './AnimatedCounter';
 import BalanceChart from './BalanceChart';
+import TotalBalanceBox from './totalBalanceBox';
+import { IAccount } from '../type';
 
-type Account = {
-  name?: string;
-  bsb?: string;
-  accNo?: string;
-  image?: string;
-  balance?: string;
-};
-
-type IAccount = {
-  accounts: Account[];
+type ModalAccountsProps = {
+  accounts: IAccount[];
   onAddAccount: () => void;
+  onTopUp: (index: number, amount: number) => void;
 };
 
-export const ModalAccounts: React.FC<IAccount> = ({
+export const ModalAccounts: React.FC<ModalAccountsProps> = ({
   accounts,
   onAddAccount,
+  onTopUp,
 }) => {
   // Convert balance from string to number for BalanceChart
-  const chartData = accounts.map(account => ({
+  const chartData = accounts.map((account) => ({
     balance: Number(account.balance) || 0,
     name: account.name || 'Unknown',
   }));
@@ -61,8 +57,20 @@ export const ModalAccounts: React.FC<IAccount> = ({
               <span className="font-poppins font-bold">Balance</span>
               <span className="font-poppins">{account.balance}</span>
             </div>
+            <div className="flex flex-col px-space-10">
+              <div className="flex items-center space-x-4">
+                {/* Add Top Up button */}
+                <button
+                  onClick={() => onTopUp(index, 100)} // Clicking button tops up $100
+                  className="bg-teal-green text-white font-poppins px-3 py-1 text-sm rounded-m"
+                >
+                  Top Up $100
+                </button>
+              </div>
+            </div>
           </div>
         ))}
+
         {/* Add Account Button */}
         <div className="flex justify-center md:justify-start mt-space-6">
           <button
@@ -74,26 +82,24 @@ export const ModalAccounts: React.FC<IAccount> = ({
         </div>
       </div>
 
-      {/* Right Section: Chart and Image */}
+      {/* Right Section: Chart and Total Balance */}
       <div className="hidden md:flex flex-col md:w-[40%] items-center justify-center p-5">
-        {/* Chart */}
+        {/* Balance Chart */}
         <div className="total-balance-chart flex justify-center items-center">
           <BalanceChart accounts={chartData} />
         </div>
-        {/* Text and Image */}
-        <div className='flex flex-col gap-6 flex-1'>
-          <h2 className='font-prosto text-xxl text-center mt-2'>
+        {/* Total Balance Display */}
+        <div className="flex flex-col gap-6 flex-1">
+          <h2 className="font-prosto text-xxl text-center mt-2">
             Bank Accounts: {accounts.length}
           </h2>
-          <div className='font-prosto text-xxl text-center'>
-            <p className='font-prosto '>
-              Total Blance: 
-              <div className='font-prosto text-xl text-center'>
-                {/* Needs update */}
-              <AnimatedCounter amount={1000} /> 
-            </div>
+          <div className="font-prosto text-xxl text-center">
+            <p className="font-prosto">
+              Total Balance:
+              <div className="font-prosto text-xl text-center">
+                <AnimatedCounter amount={totalCurrentBalance} />
+              </div>
             </p>
-            
           </div>
         </div>
         <img
@@ -114,7 +120,22 @@ export const ModalAccounts: React.FC<IAccount> = ({
           className="w-[250px] pt-space-6"
         />
       </div>
+
+      {/* Add Account and Total Balance Box Section */}
+      <div className="mt-space-6 flex justify-between items-start w-full">
+        {/* Add One More Saving Account button */}
+        <button
+          onClick={onAddAccount}
+          className="bg-teal-green text-white font-poppins px-4 py-2 rounded-m"
+        >
+          Add One More Saving Account
+        </button>
+
+        {/* Total Balance Box */}
+        <div className="flex justify-end">
+          <TotalBalanceBox accounts={accounts} />
+        </div>
+      </div>
     </div>
   );
 };
-

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
+import { IAccount } from "../type";
 
 // 接收 accounts 作为 props
 interface TransferBetweenAccountsProps {
-  accounts: {
-    name: string;
-    bsb: string;
-    accNo: string;
-    balance: string;
-  }[];
+  accounts: IAccount[];
 }
 
 export const TransferBetweenAccounts: React.FC<

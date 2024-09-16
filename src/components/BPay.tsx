@@ -1,12 +1,8 @@
 import React, { useState } from "react";
+import { IAccount } from "../type";
 
 interface BPayProps {
-  accounts: {
-    name: string;
-    bsb: string;
-    accNo: string;
-    balance: string;
-  }[];
+  accounts: IAccount[];
 }
 
 export const BPay: React.FC<BPayProps> = ({ accounts }) => {

@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
+import { IAccount } from "../type";
 
 interface RecurringPaymentsProps {
-  accounts: {
-    name: string;
-    bsb: string;
-    accNo: string;
-    balance: string;
-  }[];
+  accounts: IAccount[];
 }
 
 export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({

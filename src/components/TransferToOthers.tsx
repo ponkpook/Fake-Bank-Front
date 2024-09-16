@@ -1,13 +1,9 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
+import { IAccount } from "../type";
 
 interface TransferToOthersProps {
-  accounts: {
-    name: string;
-    bsb: string;
-    accNo: string;
-    balance: string;
-  }[];
+  accounts: IAccount[];
 }
 
 export const TransferToOthers: React.FC<TransferToOthersProps> = ({
