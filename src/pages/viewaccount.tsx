@@ -13,17 +13,17 @@ export const Viewaccount = () => {
     } else {
       setAccounts([
         {
-          name: "Everyday",
+          name: "Everyday Account",
           bsb: "010-010",
           accNo: "1234 5678",
-          image: "/assets/section1.png",
+          image: "/assets/number1.png",
           balance: "$100.00",
         },
         {
-          name: "Saving",
+          name: "NetBank Saving",
           bsb: "010-010",
           accNo: "1234 5678",
-          image: "/assets/section2.png",
+          image: "/assets/number2.png",
           balance: "$1000.00",
         },
       ]);
@@ -49,10 +49,10 @@ export const Viewaccount = () => {
   const addAccount = () => {
     if (accounts.length >= 5) return;
     const newAccount = {
-      name: `Saving ${accounts.length}`,
+      name: `NetBank Saving ${accounts.length}`,
       bsb: "010-010",
       accNo: "1234 5678",
-      image: "/assets/section2.png",
+      image: `/assets/number${accounts.length+1}.png`,
       balance: "$1000.00",
     };
     const newAccounts = [...accounts, newAccount];
@@ -65,7 +65,7 @@ export const Viewaccount = () => {
     <Container>
       <div>
         <div className="flex flex-row">
-          <div className="flex w-[60%]">
+          <div className="flex w-[100%]">
             <ModalAccounts
               accounts={accounts}
               onAddAccount={addAccount}

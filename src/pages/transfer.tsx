@@ -16,17 +16,17 @@ export const Transfer: React.FC = () => {
     } else {
       setAccounts([
         {
-          name: "Everyday",
+          name: "Everyday Account",
           bsb: "010-010",
           accNo: "1234 5678",
-          image: "/assets/section1.png",
+          image: "/assets/number1.png",
           balance: "$100.00",
         },
         {
-          name: "Saving",
+          name: "NetBank Saving",
           bsb: "010-010",
           accNo: "1234 5678",
-          image: "/assets/section2.png",
+          image: "/assets/number2.png",
           balance: "$1000.00",
         },
       ]);
