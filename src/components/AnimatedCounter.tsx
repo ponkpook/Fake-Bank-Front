@@ -17,7 +17,7 @@ import CountUp from 'react-countup';
     return (
         <div className='w-full'>
         <CountUp 
-            decimal=','
+            decimal='.'
             decimals={2}
             prefix='AUD: $'
             end={totalBalance} // Use total balance

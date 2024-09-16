@@ -7,7 +7,7 @@ interface GreetingSectionProps {
 
     const GreetingSection: React.FC<GreetingSectionProps> = ({ title, message }) => {
     return (
-        <div className="flex flex-col items-center justify-center bg-light-green rounded min-h-[800px] p-4 md:p-10 md:flex-1">
+    <div className="flex flex-col items-center justify-center bg-light-green rounded min-h-[800px] p-4 md:ml-10 md:flex-1">
         <div className="pb-space-10 flex justify-center">
             <img
             src="./assets/person-icon.png"

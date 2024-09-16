@@ -18,7 +18,7 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
 
 
   return (
-    <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg mt-10 rounded-m">
+    <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg my-10 rounded-m">
       {/* Account Information Section */}
       <div className="flex flex-col w-full md:w-[60%] p-5 mt-4">
         <div className="font-prosto text-xxxl text-center md:text-left mb-10">
