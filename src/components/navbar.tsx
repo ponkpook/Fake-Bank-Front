@@ -1,88 +1,61 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { NavLink } from "react-router-dom";
+import React, { useState } from "react";
+import NavMenu from "./NavMenu";
+import NavItem from "./NavItem";
+import SignUpAndInButtons from "./SignUpAndInButtons";
+import SignOffButton from "./SignOffButton";
 
 export function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // set as true for testing
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+
   return (
-    <nav className="bg-bg-green text-black p-space-10">
+    <nav className="nav-bg-green text-black p-space-1 shadow-lg">
       <div className="container flex justify-between items-center">
+
         {/* Logo */}
-        <div className="flex items-center space-x-2">
-          <div className="bg-white p-2 rounded-full">
-            <svg
-              className="h-8 w-8 text-gray-800"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 2C13.105 2 14 2.895 14 4C14 5.105 13.105 6 12 6C10.895 6 10 5.105 10 4C10 2.895 10.895 2 12 2ZM12 8C13.105 8 14 8.895 14 10C14 11.105 13.105 12 12 12C10.895 12 10 11.105 10 10C10 8.895 10.895 8 12 8ZM12 14C13.105 14 14 14.895 14 16C14 17.105 13.105 18 12 18C10.895 18 10 17.105 10 16C10 14.895 10.895 14 12 14ZM12 20C13.105 20 14 20.895 14 22C14 23.105 13.105 24 12 24C10.895 24 10 23.105 10 22C10 20.895 10.895 20 12 20Z"
-              />
-            </svg>
-          </div>
+        <div className="flex items-center space-x-6 md:space-x-8 lg:space-x-10">
+          <img
+            src="./assets/logo-icon.png"
+            alt="logo-icon"
+            className="w-[80px] h-[80px] ml-4"
+          />
           <span className="font-bold text-xl">Fake Bank</span>
         </div>
 
-        {/* direction */}
-        <div className="flex space-x-8">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              `rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
-                isActive ? "font-bold underline" : "font-light "
-              }`
-            }
-          >
-            My home
-          </NavLink>
-          <NavLink
-            to="/accounts"
-            className={({ isActive }) =>
-              `rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
-                isActive ? "font-bold underline" : "font-light "
-              }`
-            }
-          >
-            View accounts
-          </NavLink>
-          <NavLink
-            to="/transfer"
-            className={({ isActive }) =>
-              `rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
-                isActive ? "font-bold underline" : "font-light "
-              }`
-            }
-          >
-            Transfer
-          </NavLink>
-          <NavLink
-            to="/"
-            className="font-light rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition"
-          >
-            Transaction
-          </NavLink>
+        {/* Full-screen Navigation Bar */}
+        <div className="hidden md:flex flex-grow justify-center space-x-8">
+          <NavItem isLoggedIn={isLoggedIn} />
         </div>
 
-        {/* login signup */}
-        <div className="flex space-x-4">
-          <Link
-            to="/login"
-            className="bg-transparent text-black rounded-full font-light px-space-4 py-space-2 shadow-lg  hover:bg-native-milk/50 transition"
+        {/* Conditional Login/Signup or Sign Off Buttons */}
+        {isLoggedIn ? <SignOffButton /> : <SignUpAndInButtons />}
+
+        {/* Menu Toggle Button for Mobile */}
+        <button
+          className="block md:hidden text-xl focus:outline-none"
+          onClick={toggleMenu}
+        >
+          <svg
+            className="h-6 w-6 text-gray-800"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
           >
-            Log In
-          </Link>
-          <Link
-            to="/signup"
-            className="bg-native-red rounded-full text-black font-light px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition"
-          >
-            Sign Up
-          </Link>
-        </div>
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M4 6h16M4 12h16m-7 6h7"
+            />
+          </svg>
+        </button>
       </div>
+
+      {/* Mobile Menu */}
+      <NavMenu isMenuOpen={isMenuOpen} isLoggedIn={isLoggedIn} />
     </nav>
   );
 }
