@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Container } from "../components/Container";
+import { Container } from "../components/container";
 import { ModalAccounts } from "../components/modal-accounts";
 import { IAccount } from "../type";
 
@@ -52,7 +52,7 @@ export const Viewaccount = () => {
       name: `NetBank Saving ${accounts.length}`,
       bsb: "010-010",
       accNo: "1234 5678",
-      image: `/assets/number${accounts.length+1}.png`,
+      image: `/assets/number${accounts.length + 1}.png`,
       balance: "$1000.00",
     };
     const newAccounts = [...accounts, newAccount];
