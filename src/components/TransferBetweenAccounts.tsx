@@ -1,10 +1,18 @@
 import React, { useState } from "react";
+import { IAccount } from "../type";
 
-export const TransferBetweenAccounts: React.FC = () => {
-  const accounts = ["Smart Access", "NetBank Saver"];
+// 接收 accounts 作为 props
+interface TransferBetweenAccountsProps {
+  accounts: IAccount[];
+}
+
+export const TransferBetweenAccounts: React.FC<
+  TransferBetweenAccountsProps
+> = ({ accounts }) => {
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
-  const [transferAmount, setTransferAmount] = useState<string>(""); // Separate state for transfer amount
+  const [transferAmount, setTransferAmount] = useState<string>("");
+
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] =
@@ -21,14 +29,15 @@ export const TransferBetweenAccounts: React.FC = () => {
     setIsTransferToDropdownOpen(false);
   };
 
+  // 过滤出可用的转账目标账户（不能转账给自己）
   const availableTransferToOptions = accounts.filter(
-    (account) => account !== selectedAccount
+    (account) => account.name !== selectedAccount
   );
 
   return (
     <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
       <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
-        {/* Left Panel */}
+        {/* 左侧账户选择 */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
             <div className="text-black text-l font-normal font-['Poppins'] mb-space-4 mt-space-4">
@@ -47,11 +56,12 @@ export const TransferBetweenAccounts: React.FC = () => {
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {accounts.map((account) => (
                     <button
-                      key={account}
+                      key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account)}
+                      onClick={() => handleAccountChange(account.name)}
                     >
-                      {account}
+                      {account.name} (BSB: {account.bsb}, Account:{" "}
+                      {account.accNo})
                     </button>
                   ))}
                 </div>
@@ -60,7 +70,7 @@ export const TransferBetweenAccounts: React.FC = () => {
           </div>
         </div>
 
-        {/* Right Panel */}
+        {/* 右侧选择转账账户 */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
             <div className="mb-16">
@@ -75,7 +85,7 @@ export const TransferBetweenAccounts: React.FC = () => {
                   onClick={() =>
                     setIsTransferToDropdownOpen(!isTransferToDropdownOpen)
                   }
-                  disabled={!selectedAccount} // 禁用按钮直到选择了账户
+                  disabled={!selectedAccount} // 禁用直到选择了账户
                 >
                   {selectedTransferTo || "Select Account"}
                 </button>
@@ -83,11 +93,12 @@ export const TransferBetweenAccounts: React.FC = () => {
                   <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                     {availableTransferToOptions.map((account) => (
                       <button
-                        key={account}
+                        key={account.accNo}
                         className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => handleTransferToChange(account)}
+                        onClick={() => handleTransferToChange(account.name)}
                       >
-                        {account}
+                        {account.name} (BSB: {account.bsb}, Account:{" "}
+                        {account.accNo})
                       </button>
                     ))}
                   </div>
@@ -100,12 +111,11 @@ export const TransferBetweenAccounts: React.FC = () => {
               </div>
               <input
                 type="number"
-                min="0.01" // minimum transfer amount set to 0.01 dollar
+                min="0.01"
                 className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                 placeholder="Enter amount"
-                value={transferAmount} // Use the new state variable for amount
+                value={transferAmount}
                 onChange={(e) => setTransferAmount(e.target.value)}
-                disabled={!selectedAccount} // 禁用直到选择了账户
               />
             </div>
             <button className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">

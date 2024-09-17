@@ -1,4 +1,3 @@
-// src/App.tsx
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Homepage } from "./pages/homepage";
@@ -7,6 +6,7 @@ import { Signup } from "./pages/signup";
 import { Transfer } from "./pages/transfer";
 import { Viewaccount } from "./pages/viewaccount";
 import "./App.css";
+
 
 export const App = () => {
   return (

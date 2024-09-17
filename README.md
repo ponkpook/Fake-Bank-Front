@@ -30,6 +30,14 @@ yarn start
 ```
 yarn add -D tailwindcss
 npx tailwindcss -i ./src/input.css -o ./public/output.css --watch
+
+```
+
+## chart.js
+
+```
+yarn add react-countup react-chartjs-2 chart.js react-bootstrap bootstrap
+
 ```
 
 Git Flow 是一种常见的工作流方法，通常用于有多个发布周期和功能开发的项目。它使用了明确的分支命名和结构。

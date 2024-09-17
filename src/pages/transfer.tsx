@@ -1,25 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import { TransferBetweenAccounts } from "../components/TransferBetweenAccounts";
 import { TransferToOthers } from "../components/TransferToOthers";
 import { BPay } from "../components/BPay";
 import { RecurringPayments } from "../components/RecurringPayments";
+import { IAccount } from "../type";
+import { userID } from "./viewaccount";
 
 export const Transfer: React.FC = () => {
+  // 初始化账户列表
+  useEffect(() => {
+    let storageAccounts = localStorage.getItem(userID);
+    if (storageAccounts) {
+      setAccounts(JSON.parse(storageAccounts));
+    } else {
+      setAccounts([
+        {
+          name: "Everyday Account",
+          bsb: "010-010",
+          accNo: "1234 5678",
+          image: "/assets/number1.png",
+          balance: "$100.00",
+        },
+        {
+          name: "NetBank Saving",
+          bsb: "010-010",
+          accNo: "1234 5678",
+          image: "/assets/number2.png",
+          balance: "$1000.00",
+        },
+      ]);
+    }
+  }, []);
+
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
+
   const [activeComponent, setActiveComponent] = useState<number>(0);
 
+  // 动态渲染不同的组件
   const renderComponent = () => {
     switch (activeComponent) {
       case 0:
-        return <TransferBetweenAccounts />;
+        // 将 accounts 传递给 TransferBetweenAccounts
+        return <TransferBetweenAccounts accounts={accounts} />;
       case 1:
-        return <TransferToOthers />;
+        return <TransferToOthers accounts={accounts} />;
       case 2:
-        return <BPay />;
+        return <BPay accounts={accounts} />;
       case 3:
-        return <RecurringPayments />;
+        return <RecurringPayments accounts={accounts} />;
       default:
-        return <TransferBetweenAccounts />;
+        return <TransferBetweenAccounts accounts={accounts} />;
     }
   };
 
