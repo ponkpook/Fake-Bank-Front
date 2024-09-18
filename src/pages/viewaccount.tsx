@@ -2,33 +2,27 @@ import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import { ModalAccounts } from "../components/modal-accounts";
 import { IAccount } from "../type";
+import axios from "axios";
 
-export const userID = "accounts"; // string
+export const userID = "admin1"; // string
 
 export const Viewaccount = () => {
   useEffect(() => {
-    let storageAccounts = localStorage.getItem(userID);
-    if (storageAccounts) {
-      setAccounts(JSON.parse(storageAccounts));
-    } else {
-      setAccounts([
-        {
-          name: "Everyday Account",
-          bsb: "010-010",
-          accNo: "1234 5678",
-          image: "/assets/number1.png",
-          balance: "$100.00",
-        },
-        {
-          name: "NetBank Saving",
-          bsb: "010-010",
-          accNo: "1234 5678",
-          image: "/assets/number2.png",
-          balance: "$1000.00",
-        },
-      ]);
-    }
+    axios.get(`http://localhost:3001/user/${userID}/accounts`).then((response) => {
+      var accounts = [];
+      for (var i=0; i<Math.min(response.data.length,5); i++){
+        accounts.push({
+          name: response.data[i].accountName,
+          bsb: response.data[i].BSB,
+          accNo: response.data[i].accountNumber,
+          image: `/assets/number${i+1}.png`,
+          balance: `$${response.data[i].balance}`,
+        });
+      }
+      setAccounts(accounts);
+    });
   }, []);
+
   const [accounts, setAccounts] = useState<IAccount[]>([]);
 
   // 充值函数，增加指定账户的余额
@@ -42,23 +36,39 @@ export const Viewaccount = () => {
       }
       return account;
     });
+    axios.patch(`http://localhost:3001/user/${userID}/deposit`, null, {
+      params:
+        {
+          username: userID,
+          accountNumber: accounts[index].accNo,
+          amount: amount,
+        }
+    });
     setAccounts(updatedAccounts);
-    localStorage.setItem(userID, JSON.stringify(updatedAccounts)); // 更新 localStorage
   };
+
 
   const addAccount = () => {
     if (accounts.length >= 5) return;
-    const newAccount = {
-      name: `NetBank Saving ${accounts.length}`,
-      bsb: "010-010",
-      accNo: "1234 5678",
-      image: `/assets/number${accounts.length + 1}.png`,
-      balance: "$1000.00",
-    };
-    const newAccounts = [...accounts, newAccount];
-    setAccounts(newAccounts);
-
-    localStorage.setItem(userID, JSON.stringify(newAccounts));
+    axios.post(`http://localhost:3001/user/${userID}}/newAccount`, null, {
+      params:
+        {
+          username: userID,
+          accountName: `NetBank Saving ${accounts.length}`,
+          balance: 1000,
+        }
+    }
+    ).then((response) => {
+      const newAccount = {
+        name: response.data.accountName,
+        bsb: response.data.BSB,
+        accNo: response.data.accountNumber,
+        image: `/assets/number${accounts.length + 1}.png`,
+        balance: `$${response.data.balance}`,
+      };
+      const newAccounts = [...accounts, newAccount];
+      setAccounts(newAccounts);
+    });
   };
 
   return (
