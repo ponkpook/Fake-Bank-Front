@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { IAccount } from "../type";
+import TransferConfirmationModal from "./TransferConfirmationModal";
 
 interface BPayProps {
   accounts: IAccount[];
@@ -8,13 +9,33 @@ interface BPayProps {
 export const BPay: React.FC<BPayProps> = ({ accounts }) => {
   //const accounts = ["Smart Access", "NetBank Saver"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [billerName, setBillerName] = useState<string>(""); // 追踪biller name
+  const [billerCode, setBillerCode] = useState<string>(""); // 追踪biller code
+  const [referenceNumber, setReferenceNumber] = useState<string>(""); // 追踪reference number
   const [transferAmount, setTransferAmount] = useState<string>(""); // Separate state for transfer amount
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
+    useState<boolean>(false);
+
+  const [isConfirmationVisible, setIsConfirmationVisible] =
     useState<boolean>(false);
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
     setIsAccountDropdownOpen(false);
+  };
+
+  const handleConfirm = () => {
+    if (
+      selectedAccount &&
+      billerName &&
+      billerCode &&
+      referenceNumber &&
+      transferAmount
+    ) {
+      setIsConfirmationVisible(true); // 显示模态框
+    } else {
+      alert("Please fill in all fields.");
+    }
   };
 
   return (
@@ -64,6 +85,7 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                 type="text"
                 className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                 placeholder="Enter biller Name"
+                onChange={(e) => setBillerName(e.target.value)}
                 disabled={!selectedAccount}
               />
             </div>
@@ -78,6 +100,7 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholder="Enter biller code"
                   disabled={!selectedAccount}
+                  onChange={(e) => setBillerCode(e.target.value)}
                 />
               </div>
               <div className="flex-1 ml-4">
@@ -88,6 +111,7 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                   type="text"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholder="Enter reference No."
+                  onChange={(e) => setReferenceNumber(e.target.value)}
                   disabled={!selectedAccount}
                 />
               </div>
@@ -107,12 +131,22 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                 disabled={!selectedAccount}
               />
             </div>
-            <button className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
+            <button
+              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              onClick={handleConfirm}
+            >
               Confirm
             </button>
           </div>
         </div>
       </div>
+      <TransferConfirmationModal
+        show={isConfirmationVisible}
+        handleClose={() => setIsConfirmationVisible(false)}
+        amount={transferAmount}
+        recipient={billerName} // 使用billerName作为接收人
+        fromAccount={selectedAccount}
+      />
     </div>
   );
 };

@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
 import { IAccount } from "../type";
+import TransferConfirmationModal from "./TransferConfirmationModal";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 interface RecurringPaymentsProps {
   accounts: IAccount[];
@@ -14,6 +17,10 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>("");
+
+  const [startDate, setStartDate] = useState<Date | null>(null); // 使用 Date 对象
+  const [endDate, setEndDate] = useState<Date | null>(null); // 使用 Date 对象
+
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] =
@@ -22,6 +29,8 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
     useState<boolean>(false);
   const [isNewPayee, setIsNewPayee] = useState<boolean>(false); // State to control modal visibility
   const [selectedFrequency, setSelectedFrequency] = useState<string>("");
+  const [isConfirmationVisible, setIsConfirmationVisible] =
+    useState<boolean>(false);
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -36,6 +45,21 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
 
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
+  };
+
+  const handleConfirm = () => {
+    if (
+      selectedAccount &&
+      selectedTransferTo &&
+      transferAmount &&
+      startDate &&
+      endDate &&
+      selectedFrequency
+    ) {
+      setIsConfirmationVisible(true); // 显示模态框
+    } else {
+      alert("Please fill in all fields.");
+    }
   };
 
   return (
@@ -183,10 +207,12 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 <div className="text-black text-base font-normal font-['Poppins'] mb-space-4 mt-space-4">
                   Start Date:
                 </div>
-                <input
-                  type="text"
+                <DatePicker
+                  selected={startDate}
+                  onChange={(date: Date | null) => setStartDate(date)} // 确保类型是 Date | null
+                  dateFormat="dd/MM/yyyy"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
-                  placeholder="Enter start date"
+                  placeholderText="Select start date"
                   disabled={!selectedAccount}
                 />
               </div>
@@ -194,10 +220,12 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 <div className="text-black text-base font-normal font-['Poppins'] mb-space-4 mt-space-4">
                   End Date:
                 </div>
-                <input
-                  type="text"
+                <DatePicker
+                  selected={endDate}
+                  onChange={(date: Date | null) => setEndDate(date)} // 修改为 Date | null
+                  dateFormat="dd/MM/yyyy"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
-                  placeholder="Enter end date"
+                  placeholderText="Select end date"
                   disabled={!selectedAccount}
                 />
               </div>
@@ -235,12 +263,26 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
               </div>
             </div>
 
-            <button className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
+            <button
+              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              onClick={handleConfirm}
+            >
               Confirm
             </button>
           </div>
         </div>
       </div>
+      {/* 显示确认模态框 */}
+      <TransferConfirmationModal
+        show={isConfirmationVisible}
+        handleClose={() => setIsConfirmationVisible(false)}
+        amount={transferAmount}
+        recipient={selectedTransferTo}
+        fromAccount={selectedAccount}
+        frequency={selectedFrequency}
+        startDate={startDate?.toLocaleDateString()}
+        endDate={endDate?.toLocaleDateString()}
+      />
     </div>
   );
 };

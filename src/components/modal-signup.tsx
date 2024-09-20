@@ -24,25 +24,26 @@ export const ModalSignup = () => {
     event.preventDefault();
 
     // 使用验证逻辑
-    const { usernameError, passwordError } = validateCredentials(username, password);
+    const validate = validateCredentials(username, password);
 
-    if (usernameError || passwordError) {
-      setUsernameError(usernameError || "");
-      setPasswordError(passwordError || "");
+    if (validate.username !== "") {
+      setUsernameError(validate.username);
       return;
+    } else if (validate.password !== "") {
+      setPasswordError(validate.password);
+      return;
+    } else {
+      
     }
 
-    // 清除之前的错误信息
-    setUsernameError("");
-    setPasswordError("");
-
     axios
-      .post("http://localhost:3001/auth/login", { username, password })
+      .post("http://localhost:3001/auth/register", { username, password })
       .then((response) => {
-        if (response?.data?.data?.success) {
-          console.log("Login successful:", response.data);
+        if (response.data.success) {
+          console.log("Register success:", response.data);
           navigate("/accounts");
         } else {
+          console.log("Register failed:", response.data);
           setError("Invalid username or password");
         }
       })

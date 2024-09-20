@@ -22,34 +22,31 @@ export const ModalLogin = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-
     // 使用验证逻辑
-    const { usernameError, passwordError } = validateCredentials(username, password);
-
-    if (usernameError || passwordError) {
-      setUsernameError(usernameError || "");
-      setPasswordError(passwordError || "");
+    const validate = validateCredentials(username, password);
+    if (validate.username !== "") {
+      setUsernameError(validate.username);
       return;
+    } else if (validate.password !== "") {
+      setPasswordError(validate.password);
+      return;
+    } else {
     }
 
-    // 清除之前的错误信息
-    setUsernameError("");
-    setPasswordError("");
-
-    axios
-      .post("http://localhost:3001/auth/login", { username, password })
+    axios.post("http://localhost:3001/auth/login", { username, password })
       .then((response) => {
-        if (response?.data?.data?.success) {
+        if (response.data.success) {
           console.log("Login successful:", response.data);
           // store userID
-          localStorage.setItem("userID", response.data.data.userID);
+          localStorage.setItem("userID", username);
           navigate("/accounts");
         } else {
           setError("Invalid username or password");
+          console.log("Login failed:", response.data);
         }
       })
       .catch((error) => {
-        console.error("Error logging in:", error);
+        console.log("Error logging in:", error);
         setError("An error occurred while logging in. Please try again.");
       });
   };
