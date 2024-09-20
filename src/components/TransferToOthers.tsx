@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
 import { IAccount } from "../type";
+import TransferConfirmationModal from "./TransferConfirmationModal";
 
 interface TransferToOthersProps {
   accounts: IAccount[];
@@ -19,6 +20,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] =
     useState<boolean>(false);
   const [isNewPayee, setIsNewPayee] = useState<boolean>(false); // State to control modal visibility
+  const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -29,6 +31,14 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
   const handleTransferToChange = (payee: string) => {
     setSelectedTransferTo(payee);
     setIsTransferToDropdownOpen(false);
+  };
+
+  const handleConfirm = () => {
+    if (selectedAccount && selectedTransferTo && transferAmount) {
+      setIsPopupVisible(true); // 显示确认弹窗
+    } else {
+      alert("Please fill in all fields.");
+    }
   };
 
   return (
@@ -123,7 +133,10 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
               >
                 {isNewPayee ? "Pay existing payee?" : "Pay someone new?"}
               </button>
-              <button className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
+              <button
+                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+                onClick={handleConfirm}
+              >
                 Confirm payment
               </button>
             </div>
@@ -171,6 +184,16 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
           </button>
         </form>
       </NewPayeePopup>
+
+      {isPopupVisible && (
+        <TransferConfirmationModal
+          show={isPopupVisible}
+          handleClose={() => setIsPopupVisible(false)}
+          amount={transferAmount}
+          recipient={selectedTransferTo}
+          fromAccount={selectedAccount} // Pass the selected "from" account
+        />
+      )}
     </div>
   );
 };

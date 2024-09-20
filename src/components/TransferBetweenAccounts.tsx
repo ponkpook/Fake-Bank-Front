@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { IAccount } from "../type";
+import TransferConfirmationModal from "./TransferConfirmationModal";
 
-// 接收 accounts 作为 props
 interface TransferBetweenAccountsProps {
   accounts: IAccount[];
 }
@@ -12,6 +12,7 @@ export const TransferBetweenAccounts: React.FC<
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>("");
+  const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
 
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
@@ -33,6 +34,14 @@ export const TransferBetweenAccounts: React.FC<
   const availableTransferToOptions = accounts.filter(
     (account) => account.name !== selectedAccount
   );
+
+  const handleConfirm = () => {
+    if (selectedAccount && selectedTransferTo && transferAmount) {
+      setIsPopupVisible(true); // 显示确认弹窗
+    } else {
+      alert("Please fill in all fields.");
+    }
+  };
 
   return (
     <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
@@ -118,11 +127,24 @@ export const TransferBetweenAccounts: React.FC<
                 onChange={(e) => setTransferAmount(e.target.value)}
               />
             </div>
-            <button className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full">
+            <button
+              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              onClick={handleConfirm}
+            >
               Confirm
             </button>
           </div>
         </div>
+        {/* 弹窗组件，展示转账确认信息 */}
+        {isPopupVisible && (
+          <TransferConfirmationModal
+            show={isPopupVisible}
+            handleClose={() => setIsPopupVisible(false)}
+            amount={transferAmount}
+            recipient={selectedTransferTo}
+            fromAccount={selectedAccount} // Pass the selected "from" account
+          />
+        )}
       </div>
     </div>
   );
