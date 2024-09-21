@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { NewPayeePopup } from "./NewPayeePopup";
 import { IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import TransferResultModal from "./TransferResultModal";
+import { useNavigate } from "react-router-dom";
 
 interface RecurringPaymentsProps {
   accounts: IAccount[];
@@ -31,6 +33,14 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
   const [selectedFrequency, setSelectedFrequency] = useState<string>("");
   const [isConfirmationVisible, setIsConfirmationVisible] =
     useState<boolean>(false);
+
+  // State for result modal
+  const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
+  const [transferStatus, setTransferStatus] = useState<"success" | "fail">(
+    "success"
+  );
+
+  const navigate = useNavigate();
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -60,6 +70,31 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
     } else {
       alert("Please fill in all fields.");
     }
+  };
+
+  // Handle the actual transfer process
+  const handleTransfer = () => {
+    const isSuccess = 1; // Randomly simulate success or failure
+    setIsConfirmationVisible(false); // Close the confirmation modal
+    setTransferStatus(isSuccess ? "success" : "fail");
+    setIsResultVisible(true); // Show the result modal
+  };
+
+  // Close modal and navigate to "View Accounts" after 10 seconds
+  useEffect(() => {
+    if (isResultVisible) {
+      const timeout = setTimeout(() => {
+        setIsResultVisible(false);
+        navigate("/accounts"); // Redirect to "View Accounts" page
+      }, 3000); // 10 seconds
+      return () => clearTimeout(timeout); // Clear timeout if component unmounts
+    }
+  }, [isResultVisible, navigate]);
+
+  // Handle manual closing of the result modal
+  const handleClose = () => {
+    setIsResultVisible(false);
+    navigate("/accounts"); // Redirect when user manually closes the modal
   };
 
   return (
@@ -282,6 +317,14 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
         frequency={selectedFrequency}
         startDate={startDate?.toLocaleDateString()}
         endDate={endDate?.toLocaleDateString()}
+        onConfirm={handleTransfer}
+      />
+
+      {/* Result Modal */}
+      <TransferResultModal
+        show={isResultVisible}
+        status={transferStatus}
+        handleClose={handleClose}
       />
     </div>
   );

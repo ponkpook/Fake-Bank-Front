@@ -11,6 +11,7 @@ interface TransferConfirmationModalProps {
   frequency?: string;
   startDate?: string;
   endDate?: string;
+  onConfirm: () => void; // Add the onConfirm prop to handle transfer logic
 }
 
 function TransferConfirmationModal({
@@ -22,6 +23,7 @@ function TransferConfirmationModal({
   frequency,
   startDate,
   endDate,
+  onConfirm,
 }: TransferConfirmationModalProps) {
   return (
     <Modal show={show} onHide={handleClose}>
@@ -63,6 +65,7 @@ function TransferConfirmationModal({
           }}
           onClick={() => {
             // Handle transfer logic here
+            onConfirm();
             handleClose();
           }}
         >
