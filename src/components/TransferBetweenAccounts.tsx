@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
+import TransferResultModal from "./TransferResultModal";
+import { useNavigate } from "react-router-dom";
 
 interface TransferBetweenAccountsProps {
   accounts: IAccount[];
@@ -18,6 +20,14 @@ export const TransferBetweenAccounts: React.FC<
     useState<boolean>(false);
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] =
     useState<boolean>(false);
+
+  // State for result modal
+  const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
+  const [transferStatus, setTransferStatus] = useState<"success" | "fail">(
+    "success"
+  );
+
+  const navigate = useNavigate();
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -37,10 +47,35 @@ export const TransferBetweenAccounts: React.FC<
 
   const handleConfirm = () => {
     if (selectedAccount && selectedTransferTo && transferAmount) {
-      setIsPopupVisible(true); // 显示确认弹窗
+      setIsPopupVisible(true); // Show confirmation modal
     } else {
       alert("Please fill in all fields.");
     }
+  };
+
+  const handleTransfer = () => {
+    // Simulate transfer logic, 1 = success, 0 = failure
+    const isSuccess = 1;
+    setIsPopupVisible(false); // Close confirmation modal
+    setTransferStatus(isSuccess ? "success" : "fail");
+    setIsResultVisible(true); // Show result modal
+  };
+
+  // Close modal and navigate to "View Accounts" after 10 seconds
+  useEffect(() => {
+    if (isResultVisible) {
+      const timeout = setTimeout(() => {
+        setIsResultVisible(false);
+        navigate("/accounts"); // Redirect to "View Accounts" page
+      }, 3000); // 10 seconds
+      return () => clearTimeout(timeout); // Clear timeout if component unmounts
+    }
+  }, [isResultVisible, navigate]);
+
+  // Handle manual closing of the result modal
+  const handleClose = () => {
+    setIsResultVisible(false);
+    navigate("/accounts"); // Redirect when user manually closes the modal
   };
 
   return (
@@ -143,8 +178,16 @@ export const TransferBetweenAccounts: React.FC<
             amount={transferAmount}
             recipient={selectedTransferTo}
             fromAccount={selectedAccount} // Pass the selected "from" account
+            onConfirm={handleTransfer}
           />
         )}
+
+        {/* Transfer result modal */}
+        <TransferResultModal
+          show={isResultVisible}
+          status={transferStatus}
+          handleClose={handleClose}
+        />
       </div>
     </div>
   );

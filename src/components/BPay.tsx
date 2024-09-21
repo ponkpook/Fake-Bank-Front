@@ -1,6 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
+import TransferResultModal from "./TransferResultModal";
+import { useNavigate } from "react-router-dom";
 
 interface BPayProps {
   accounts: IAccount[];
@@ -19,6 +21,14 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
   const [isConfirmationVisible, setIsConfirmationVisible] =
     useState<boolean>(false);
 
+  // State for result modal
+  const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
+  const [transferStatus, setTransferStatus] = useState<"success" | "fail">(
+    "success"
+  );
+
+  const navigate = useNavigate();
+
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
     setIsAccountDropdownOpen(false);
@@ -36,6 +46,30 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
     } else {
       alert("Please fill in all fields.");
     }
+  };
+
+  // Simulate the transfer process and show result modal
+  const handleTransfer = () => {
+    const isSuccess = 1; // Randomly simulate success or failure
+    setIsConfirmationVisible(false); // Close confirmation modal
+    setTransferStatus(isSuccess ? "success" : "fail");
+    setIsResultVisible(true); // Show result modal
+  };
+
+  useEffect(() => {
+    if (isResultVisible) {
+      const timeout = setTimeout(() => {
+        setIsResultVisible(false);
+        navigate("/accounts"); // Redirect to "View Accounts" page
+      }, 3000); // 10 seconds
+      return () => clearTimeout(timeout); // Clear timeout if component unmounts
+    }
+  }, [isResultVisible, navigate]);
+
+  // Handle manual closing of the result modal
+  const handleClose = () => {
+    setIsResultVisible(false);
+    navigate("/accounts"); // Redirect when user manually closes the modal
   };
 
   return (
@@ -146,6 +180,14 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
         amount={transferAmount}
         recipient={billerName} // 使用billerName作为接收人
         fromAccount={selectedAccount}
+        onConfirm={handleTransfer}
+      />
+
+      {/* Result Modal */}
+      <TransferResultModal
+        show={isResultVisible}
+        status={transferStatus}
+        handleClose={handleClose}
       />
     </div>
   );
