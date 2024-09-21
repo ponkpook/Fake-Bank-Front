@@ -103,19 +103,25 @@ export const ModalAdmin = () => {
         <table className="w-full text-sm text-left text-gray-500">
           <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
-              <th className="px-6 py-3">ID</th>
-              <th className="px-6 py-3">Username</th>
-              <th className="px-6 py-3">Password</th>
-              <th className="px-6 py-3">Account Creation Date</th>
+              <th className="w-1/5 py-3 text-center">ID</th>
+              <th className="w-1/5 py-3 text-center">Username</th>
+              <th className="w-1/5 py-3 text-center">Password</th>
+              <th className="w-1/5 py-3 text-center">Account Creation Date</th>
+              <th className="w-1/5 py-3 text-center">Delete</th>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user, index) => (
               <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                <td className="px-6 py-4">{user.id}</td>
-                <td className="px-6 py-4">{user.username}</td>
-                <td className="px-6 py-4">{user.password}</td>
-                <td className="px-6 py-4">{user.date}</td>
+                <td className="w-1/5 py-3 text-center">{user.id}</td>
+                <td className="w-1/5 py-3 text-center">{user.username}</td>
+                <td className="w-1/5 py-3 text-center">{user.password}</td>
+                <td className="w-1/5 py-3 text-center">{user.date}</td>
+                <td className="flex py-3 justify-center">
+                  <button className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m">
+                    Delete
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>
