@@ -5,8 +5,8 @@ import { Login } from "./pages/login";
 import { Signup } from "./pages/signup";
 import { Transfer } from "./pages/transfer";
 import { Viewaccount } from "./pages/viewaccount";
+import { Transaction } from "./pages/transaction";
 import "./App.css";
-
 
 export const App = () => {
   return (
@@ -18,6 +18,7 @@ export const App = () => {
         <Route path="/signup" element={<Signup />} />
         <Route path="/accounts" element={<Viewaccount />} />
         <Route path="/transfer" element={<Transfer />} />
+        <Route path="/transaction" element={<Transaction />} />
       </Routes>
     </Router>
   );
