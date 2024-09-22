@@ -4,23 +4,39 @@ import axios from "axios";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
 
-const usersData = new Array(256).fill(null).map((_, index) => ({
-  id: index + 1,
-  username: `User ${index + 1}`,
-  password: `Password${index + 1}`,
-  date: "23/08/2024",
-}));
-
 export const ModalAdmin = () => {
+  const [users, setUsers] = useState(
+    new Array(256).fill(null).map((_, index) => ({
+      id: index + 1,
+      username: `User ${index + 1}`,
+      password: `Password${index + 1}`,
+      date: "23/08/2024",
+    }))
+  );
+
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = usersData.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
   // total page count
-  const totalPages = Math.ceil(usersData.length / usersPerPage);
+  const totalPages = Math.ceil(users.length / usersPerPage);
+
+  const deleteUser = async (id: number) => {
+    try {
+      // Make API request to delete the user from the backend
+      await fetch(`/api/users/${id}`, {
+        method: "DELETE",
+      });
+
+      // Filter out the deleted user from the local state
+      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+    } catch (error) {
+      console.error("Error deleting user:", error);
+    }
+  };
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -134,7 +150,10 @@ export const ModalAdmin = () => {
                 <td className="w-1/5 py-3 text-center">{user.password}</td>
                 <td className="w-1/5 py-3 text-center">{user.date}</td>
                 <td className="flex py-3 justify-center">
-                  <button className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m">
+                  <button
+                    className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m"
+                    onClick={() => deleteUser(user.id)}
+                  >
                     Delete
                   </button>
                 </td>
@@ -147,7 +166,7 @@ export const ModalAdmin = () => {
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-600">
           Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
-          {usersData.length} entries
+          {users.length} entries
         </span>
         <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
       </div>
