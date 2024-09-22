@@ -1,19 +1,32 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
-import GreetingSection from "./GreetingSection";
-import { validateCredentials } from "./ValidateInfo";
+import { User, UserDisplay } from "../type";
 
-const usersData = new Array(256).fill(null).map((_, index) => ({
-  id: index + 1,
-  username: `User ${index + 1}`,
-  password: `Password${index + 1}`,
-  date: "23/08/2024",
-}));
+
+
+const fetchUserData = async (): Promise<UserDisplay[]> => {
+  const response = await axios.get<User[]>("http://localhost:3001/user");
+  return response.data
+    .filter((user) => user.isAdmin === false)
+    .map((user, index) => ({
+      id: index + 1,
+      username: user.username,
+      password: user.password,
+      date: String(user.date),
+    })
+  );
+};
+
 
 export const ModalAdmin = () => {
+
+  const [usersData, setUsersData] = useState<UserDisplay[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+
+  useEffect(() => {
+    fetchUserData().then((data) => setUsersData(data));
+  }, []);
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -31,9 +44,8 @@ export const ModalAdmin = () => {
         <button
           key={1}
           onClick={() => setCurrentPage(1)}
-          className={`px-3 py-1 rounded ${
-            currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-          }`}
+          className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+            }`}
         >
           1
         </button>
@@ -45,9 +57,8 @@ export const ModalAdmin = () => {
       <button
         key={1}
         onClick={() => setCurrentPage(1)}
-        className={`px-3 py-1 rounded ${
-          currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-        }`}
+        className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
       >
         1
       </button>
@@ -101,15 +112,18 @@ export const ModalAdmin = () => {
       <button
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
-        className={`px-3 py-1 rounded ${
-          currentPage === totalPages ? "bg-blue-500 text-white" : "bg-gray-200"
-        }`}
+        className={`px-3 py-1 rounded ${currentPage === totalPages ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
       >
         {totalPages}
       </button>
     );
 
     return pageNumbers;
+  };
+
+  const deleteUser = async (username: string) => {
+    axios.delete(`http://localhost:3001/user/${username}`);
   };
 
   return (
@@ -134,7 +148,10 @@ export const ModalAdmin = () => {
                 <td className="w-1/5 py-3 text-center">{user.password}</td>
                 <td className="w-1/5 py-3 text-center">{user.date}</td>
                 <td className="flex py-3 justify-center">
-                  <button className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m">
+                  <button
+                    className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m"
+                    onClick={() => deleteUser(user.username)}
+                  >
                     Delete
                   </button>
                 </td>
@@ -153,4 +170,6 @@ export const ModalAdmin = () => {
       </div>
     </div>
   );
-};
+}
+  
+export default ModalAdmin;
