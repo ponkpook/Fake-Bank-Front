@@ -7,6 +7,7 @@ import { RecurringPayments } from "../components/RecurringPayments";
 import { IAccount } from "../type";
 import { userID } from "./viewaccount";
 
+
 export const Transfer: React.FC = () => {
   // 初始化账户列表
   useEffect(() => {
@@ -56,9 +57,9 @@ export const Transfer: React.FC = () => {
 
   return (
     <Container>
-      <div className="flex justify-center space-x-4">
+      <div className="flex flex-col md:flex-row justify-center md:space-x-4 mt-10 w-[90%] mx-auto">
         <button
-          className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
+          className={`w-full md:w-[25%] text-[20px] py-3 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
             activeComponent === 0 ? "font-bold underline" : "font-light"
           }`}
           onClick={() => setActiveComponent(0)}
@@ -66,7 +67,7 @@ export const Transfer: React.FC = () => {
           Transfer Between Own Accounts
         </button>
         <button
-          className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
+          className={`w-full md:w-[25%] text-[20px] py-3 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
             activeComponent === 1 ? "font-bold underline" : "font-light"
           }`}
           onClick={() => setActiveComponent(1)}
@@ -74,7 +75,7 @@ export const Transfer: React.FC = () => {
           Pay to Others
         </button>
         <button
-          className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
+          className={`w-full md:w-[25%] text-[20px] py-3 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
             activeComponent === 2 ? "font-bold underline" : "font-light"
           }`}
           onClick={() => setActiveComponent(2)}
@@ -82,7 +83,7 @@ export const Transfer: React.FC = () => {
           BPay
         </button>
         <button
-          className={`w-80 h-10 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
+          className={`w-full md:w-[25%] text-[20px] py-3 flex items-center justify-center transition bg-light-green hover:bg-teal-green ${
             activeComponent === 3 ? "font-bold underline" : "font-light"
           }`}
           onClick={() => setActiveComponent(3)}
@@ -91,7 +92,7 @@ export const Transfer: React.FC = () => {
         </button>
       </div>
 
-      <div className="component-display max-w-[1328px] mx-auto">
+      <div className="component-display justify-center space-x-4 w-[90%] mx-auto">
         {renderComponent()}
       </div>
     </Container>

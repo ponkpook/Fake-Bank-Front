@@ -7,7 +7,7 @@ interface NavItemProps {
 
 const NavItem: React.FC<NavItemProps> = ({ isLoggedIn }) => {
   const getNavLinkClass = (isActive: boolean, isClickable: boolean) =>
-    `text-black rounded-full px-space-4 py-space-2 hover:bg-native-milk/50 transition ${
+    `text-black text-[20px] rounded-full px-space-4 hover:bg-native-milk/50 transition ${
       isActive ? "font-bold underline" : "font-light"
     } ${!isClickable ? "pointer-events-none opacity-50" : ""}`;
 

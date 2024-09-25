@@ -44,7 +44,7 @@ export const Transaction = () => {
           key={1}
           onClick={() => setCurrentPage(1)}
           className={`px-3 py-1 rounded ${
-            currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+            currentPage === 1 ? "bg-teal-green text-white" : "bg-gray-200"
           }`}
         >
           1
@@ -58,7 +58,7 @@ export const Transaction = () => {
         key={1}
         onClick={() => setCurrentPage(1)}
         className={`px-3 py-1 rounded ${
-          currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+          currentPage === 1 ? "bg-teal-green text-white" : "bg-gray-200"
         }`}
       >
         1
@@ -86,7 +86,7 @@ export const Transaction = () => {
         <button
           key={currentPage}
           onClick={() => setCurrentPage(currentPage)}
-          className="px-3 py-1 rounded bg-blue-500 text-white"
+          className="px-3 py-1 rounded bg-teal-green text-white"
         >
           {currentPage}
         </button>
@@ -114,7 +114,7 @@ export const Transaction = () => {
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
         className={`px-3 py-1 rounded ${
-          currentPage === totalPages ? "bg-blue-500 text-white" : "bg-gray-200"
+          currentPage === totalPages ? "bg-teal-green text-white" : "bg-gray-200"
         }`}
       >
         {totalPages}
@@ -134,7 +134,7 @@ export const Transaction = () => {
               <tr>
                 <th className="w-1/5 py-3 text-center">ID</th>
                 <th className="w-1/5 py-3 text-center">FROM</th>
-                <th className="w-1/5 py-3 text-center">PassTOword</th>
+                <th className="w-1/5 py-3 text-center">TO</th>
                 <th className="w-1/5 py-3 text-center">AMOUNT</th>
                 <th className="w-1/5 py-3 text-center">DATE</th>
               </tr>

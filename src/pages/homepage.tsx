@@ -33,7 +33,7 @@ export const Homepage = () => {
               alt="section1"
               className="relative w-[50px] h-[65px]"
             />
-            <p className="relative font-poppins text-m pt-space-5">
+            <p className="relative font-poppins text-[18px] pt-space-5">
               Enjoy safe and secure banking!
             </p>
           </div>
@@ -45,7 +45,7 @@ export const Homepage = () => {
               alt="section2"
               className="relative w-[50px] h-[65px]"
             />
-            <p className="relative font-poppins text-m pt-space-5">
+            <p className="relative font-poppins text-[18px] pt-space-5">
               Manage your accounts in one place!
             </p>
           </div>
@@ -57,7 +57,7 @@ export const Homepage = () => {
               alt="section3"
               className="relative w-[50px] h-[65px]"
             />
-            <p className="relative font-poppins text-m pt-space-5">
+            <p className="relative font-poppins text-[18px] pt-space-5">
               Bank anywhere, anytime!
             </p>
           </div>

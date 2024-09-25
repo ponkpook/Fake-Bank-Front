@@ -16,9 +16,9 @@ export const NewPayeePopup: React.FC<NewPayeePopupProps> = ({
 
   return ReactDOM.createPortal(
     <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full relative">
+      <div className="bg-native-milk p-6 rounded-lg shadow-lg w-[40%] rounded-[20px] px-10 py-10 relative">
         <button
-          className="absolute top-2 right-2 text-gray-500"
+          className="absolute top-4 right-4 text-black"
           onClick={onClose}
         >
           &times;
