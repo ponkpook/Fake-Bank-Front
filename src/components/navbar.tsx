@@ -11,7 +11,7 @@ export function Navbar() {
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
-    <nav className="nav-bg-green text-black p-space-1 shadow-lg">
+    <nav className="nav-bg-green text-black  p-space-1 shadow-lg">
       <div className="container flex justify-between items-center">
 
         {/* Logo */}
@@ -21,7 +21,7 @@ export function Navbar() {
             alt="logo-icon"
             className="w-[80px] h-[80px] ml-4"
           />
-          <span className="font-bold text-xl">Fake Bank</span>
+          <span className="text-xxxxl font-prosto ">Fake Bank</span>
         </div>
 
         {/* Full-screen Navigation Bar */}

@@ -8,7 +8,7 @@ import axios from "axios";
 export const userID = "admin1"; // string
 
 export const Viewaccount = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)

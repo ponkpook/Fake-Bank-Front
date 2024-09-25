@@ -78,8 +78,8 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
   };
 
   return (
-    <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
-      <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[630px]">
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* Left Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
@@ -147,7 +147,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
                 )}
               </div>
             </div>
-            <div className="mb-10">
+            <div className="mb-20">
               <div className="text-black text-base font-normal font-['Poppins'] mb-space-4">
                 Transfer amount:
               </div>
@@ -161,7 +161,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
                 disabled={!selectedAccount} // Disable until an account is selected
               />
             </div>
-            <div className="flex justify-end space-x-4 ">
+            <div className="flex justify-end space-x-4">
               <button
                 className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
                 onClick={() => setIsNewPayee(true)} // Show the popup
