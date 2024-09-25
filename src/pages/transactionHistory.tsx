@@ -22,8 +22,87 @@ const transactionData = [
     Amount: 150,
     Date: "15/12/1212",
   },
+  //test
+  {
+    id: 1,
+    From: "Everyday",
+    To: "Abc123",
+    Amount: 100,
+    Date: "12/12/1212",
+  },
+  {
+    id: 2,
+    From: "Saving1",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 3,
+    From: "Saving2",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 1,
+    From: "Everyday",
+    To: "Abc123",
+    Amount: 100,
+    Date: "12/12/1212",
+  },
+  {
+    id: 2,
+    From: "Saving1",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 3,
+    From: "Saving2",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 1,
+    From: "Everyday",
+    To: "Abc123",
+    Amount: 100,
+    Date: "12/12/1212",
+  },
+  {
+    id: 2,
+    From: "Saving1",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 3,
+    From: "Saving2",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+  {
+    id: 1,
+    From: "Everyday",
+    To: "Abc123",
+    Amount: 100,
+    Date: "12/12/1212",
+  },
+  {
+    id: 2,
+    From: "Saving1",
+    To: "Xyz456",
+    Amount: 150,
+    Date: "15/12/1212",
+  },
+ 
 ];
-export const Transaction = () => {
+export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
 
@@ -126,11 +205,11 @@ export const Transaction = () => {
 
   return (
     <Container>
-      <div className="container mx-auto p-6">
-        <h1 className="text-2xl font-bold mb-4">Transaction History</h1>
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left text-gray-500">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+      <div className="container mx-auto p-6 ">
+        <h5 className="font-prosto mt-2 ">Transaction History - Bank Account Name##</h5>
+        <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 rounded-m min-h-[80vh] ">
+          <table className="w-full text-sm text-left text-gray-600 font-prosto">
+            <thead className="text-xs text-gray-700 font-prosto uppercase shadow-md">
               <tr>
                 <th className="w-1/5 py-3 text-center">ID</th>
                 <th className="w-1/5 py-3 text-center">FROM</th>
@@ -141,7 +220,7 @@ export const Transaction = () => {
             </thead>
             <tbody>
               {currentUsers.map((user, index) => (
-                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                <tr key={index} className=" border-b hover:shadow-lg">
                   <td className="w-1/5 py-3 text-center">{user.id}</td>
                   <td className="w-1/5 py-3 text-center">{user.From}</td>
                   <td className="w-1/5 py-3 text-center">{user.To}</td>
@@ -149,19 +228,30 @@ export const Transaction = () => {
                   <td className="w-1/5 py-3 text-center">{user.Date}</td>
                 </tr>
               ))}
+              {/* Placeholder for additional rows to maintain consistent height */}
+              {currentUsers.length < 8 && (
+                    Array.from({ length: 8 - currentUsers.length }).map((_, idx) => (
+                        <tr key={`placeholder-${idx}`} className="border-b ">
+                            <td className="w-1/5 py-3 text-center "></td>
+                            <td className="w-1/5 py-3 text-center "></td>
+                            <td className="w-1/5 py-3 text-center"></td>
+                            <td className="w-1/5 py-3 text-center "></td>
+                            <td className="w-1/5 py-3 text-center "></td>
+                        </tr>
+                    ))
+                )}
             </tbody>
           </table>
         </div>
 
         <div className="flex justify-between items-center mt-4">
-          <span className="text-sm text-gray-600">
+          <span className="text-sm text-gray-700 font-prosto">
             Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
             {transactionData.length} entries
           </span>
           <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
         </div>
       </div>
-      );
     </Container>
   );
 };

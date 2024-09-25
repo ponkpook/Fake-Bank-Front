@@ -78,7 +78,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
   };
 
   return (
-    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 h-[68vh]">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* Left Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">

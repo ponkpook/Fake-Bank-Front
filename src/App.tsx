@@ -5,7 +5,7 @@ import { Login } from "./pages/login";
 import { Signup } from "./pages/signup";
 import { Transfer } from "./pages/transfer";
 import { Viewaccount } from "./pages/viewaccount";
-// import { Transaction } from "./pages/transaction";
+import { TransactionHistory } from "./pages/transactionHistory"; // Import TransactionHistory
 import { TransactionSelect } from "./pages/transactionSelect";
 import "./App.css";
 
@@ -22,6 +22,8 @@ export const App = () => {
       <Route path="/accounts" element={<Viewaccount />} />
       <Route path="/transfer" element={<Transfer />} />
       <Route path="/transaction" element={<TransactionSelect accounts={accounts} />} />
+      <Route path="/transaction-history" element={<TransactionHistory />} />
     </Routes>
   );
 };
+
