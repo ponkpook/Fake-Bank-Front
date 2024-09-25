@@ -54,11 +54,12 @@ export const ModalSignup = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg my-10 rounded-m min-h-screen items-center justify-center">
+    <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg my-10 rounded-m min-h-[80vh] items-center justify-center">
       <div className="flex-1 flex items-center justify-center p-4 md:p-10">
         <GreetingSection
           title="Let’s set up your bank account!"
           message="Your money is safe with us! Don’t worry it should take a couple of minutes."
+          imgSrc="./assets/person-icon.png"
         />
       </div>
 

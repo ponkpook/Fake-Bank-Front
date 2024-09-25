@@ -78,7 +78,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
   };
 
   return (
-    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[630px]">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 h-[68vh]">
       <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* Left Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
@@ -163,14 +163,14 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
             </div>
             <div className="flex justify-end space-x-4">
               <button
-                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
                 onClick={() => setIsNewPayee(true)} // Show the popup
                 disabled={!selectedAccount}
               >
                 {isNewPayee ? "Pay existing payee?" : "Pay someone new?"}
               </button>
               <button
-                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
                 onClick={handleConfirm}
               >
                 Confirm payment
@@ -182,12 +182,12 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
 
       {/* Popup for new payee */}
       <NewPayeePopup isOpen={isNewPayee} onClose={() => setIsNewPayee(false)}>
-        <h2 className="text-xl font-semibold mb-4">
+        <h2 className="text-xl font-semibold font-['Poppins'] mb-4">
           Enter New Payee Information
         </h2>
         <form>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">Name:</label>
+            <label className="block text-sm font-medium font-['Poppins'] mb-2">Name:</label>
             <input
               type="text"
               className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
@@ -195,7 +195,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">BSB:</label>
+            <label className="block text-sm font-medium font-['Poppins'] mb-2">BSB:</label>
             <input
               type="text"
               className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
@@ -203,7 +203,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium mb-2">
+            <label className="block text-sm font-medium font-['Poppins'] mb-2">
               Account Number:
             </label>
             <input
@@ -214,7 +214,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
           </div>
           <button
             type="submit"
-            className="bg-native-red text-white py-2 px-4 rounded-full"
+            className="bg-native-red text-white my-2 py-2 px-4 rounded-full font-medium font-['Poppins'] hover:bg-orange-600 "
           >
             Save Payee
           </button>
