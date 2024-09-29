@@ -7,6 +7,8 @@ import { Transfer } from "./pages/transfer";
 import { Viewaccount } from "./pages/viewaccount";
 import { TransactionHistory } from "./pages/transactionHistory"; // Import TransactionHistory
 import { TransactionSelect } from "./pages/transactionSelect";
+import { Admin } from "./pages/admin";
+
 import "./App.css";
 
 import { IAccount } from "./type";
@@ -23,6 +25,7 @@ export const App = () => {
       <Route path="/transfer" element={<Transfer />} />
       <Route path="/transaction" element={<TransactionSelect accounts={accounts} />} />
       <Route path="/transaction-history" element={<TransactionHistory />} />
+      <Route path="/user-management" element={<Admin />} />
     </Routes>
   );
 };

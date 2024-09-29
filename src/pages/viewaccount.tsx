@@ -5,10 +5,10 @@ import { IAccount } from "../type";
 import { ModalAdmin } from "../components/modal-admin";
 import axios from "axios";
 
-export const userID = "admin1"; // string
-
+// export const userID = "admin1"; // string
+export const userID = "user1"; // string
 export const Viewaccount = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
+  // const [isAdmin, setIsAdmin] = useState(true);
   useEffect(() => {
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)
@@ -79,7 +79,8 @@ export const Viewaccount = () => {
         <div className="flex flex-row">
           <div className="flex w-[100%]">
             {/* Conditional rendering based on admin status */}
-            {!isAdmin && (
+            {/* {!isAdmin && ( */}
+            {(
               <ModalAccounts
                 accounts={accounts}
                 onAddAccount={addAccount}
@@ -87,7 +88,7 @@ export const Viewaccount = () => {
               />
             )}
             {/* admin */}
-            {isAdmin && <ModalAdmin />}
+            {/* {isAdmin && <ModalAdmin />} */}
           </div>
         </div>
       </div>
