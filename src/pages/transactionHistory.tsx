@@ -207,7 +207,7 @@ export const TransactionHistory = () => {
     <Container>
       <div className="container mx-auto p-6 ">
         <h5 className="font-prosto mt-2 ">Transaction History - Bank Account Name##</h5>
-        <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 rounded-m min-h-[80vh] ">
+        <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 min-h-[80vh] ">
           <table className="w-full text-sm text-left text-gray-600 font-prosto">
             <thead className="text-xs text-gray-700 font-prosto uppercase shadow-md">
               <tr>
@@ -226,6 +226,7 @@ export const TransactionHistory = () => {
                   <td className="w-1/5 py-3 text-center">{user.To}</td>
                   <td className="w-1/5 py-3 text-center">${user.Amount}</td>
                   <td className="w-1/5 py-3 text-center">{user.Date}</td>
+                  
                 </tr>
               ))}
               {/* Placeholder for additional rows to maintain consistent height */}
