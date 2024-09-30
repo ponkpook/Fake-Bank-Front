@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import { useLocation, useNavigate } from "react-router-dom";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
 const transactionData = [
   {
@@ -129,7 +131,7 @@ export const TransactionHistory = () => {
   const totalPages = Math.ceil(filteredTransactions.length / usersPerPage);
 
   const renderPageNumbers = () => {
-    const pageNumbers = [];
+    const pageNumbers: (JSX.Element | string)[] = [];
 
     // If there's only one page, render just one button
     if (totalPages === 1) {
@@ -220,6 +222,34 @@ export const TransactionHistory = () => {
     return pageNumbers;
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text(
+      `Transaction History - ${
+        selectedAccount === "All" ? "All Accounts" : selectedAccount
+      }`,
+      14,
+      15
+    );
+
+    const tableColumn = ["ID", "From", "To", "Amount", "Date"];
+    const tableRows = filteredTransactions.map((transaction) => [
+      transaction.id,
+      transaction.From,
+      transaction.To,
+      `$${transaction.Amount}`,
+      transaction.Date,
+    ]);
+
+    (doc as any).autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("transaction_history.pdf");
+  };
+
   return (
     <Container>
       <div className="container mx-auto p-6 ">
@@ -273,11 +303,19 @@ export const TransactionHistory = () => {
           <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
           <button
             className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-2 px-6 rounded-full hover:bg-orange-600"
-            onClick={() => navigate(-1)} // return to account selection
+            onClick={() => navigate(-1)} // 返回账户选择页面
           >
             Back
           </button>
         </div>
+
+        {/* 悬浮圆形按钮 */}
+        <button
+          className="fixed mt-16 top-10 right-5 bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
+          onClick={downloadPDF}
+        >
+          Download PDF
+        </button>
       </div>
     </Container>
   );
