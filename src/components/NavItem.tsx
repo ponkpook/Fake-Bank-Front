@@ -25,7 +25,7 @@ const NavItem: React.FC<NavItemProps> = ({ isLoggedIn, isAdmin }) => {
           {/* Render this if the user is an admin */}
           <NavLink
             to="/user-management"
-            className={({ isActive }) => getNavLinkClass(isActive, true)}
+            className={({ isActive }) => getNavLinkClass(isActive, isLoggedIn)}
           >
             User management
           </NavLink>
