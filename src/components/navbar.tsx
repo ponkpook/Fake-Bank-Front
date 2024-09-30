@@ -6,14 +6,14 @@ import SignOffButton from "./SignOffButton";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // set as true for testing
+  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set as true for testing
+  const [isAdmin, setIsAdmin] = useState(false); // Assume user is admin for testing
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (
     <nav className="nav-bg-green text-black p-space-1 shadow-lg">
       <div className="container flex justify-between items-center">
-
         {/* Logo */}
         <div className="flex items-center space-x-6 md:space-x-8 lg:space-x-10">
           <img
@@ -21,12 +21,12 @@ export function Navbar() {
             alt="logo-icon"
             className="w-[80px] h-[80px] ml-4"
           />
-          <span className="font-bold text-xl">Fake Bank</span>
+          <span className="text-xxxxl font-prosto">Fake Bank</span>
         </div>
 
         {/* Full-screen Navigation Bar */}
         <div className="hidden md:flex flex-grow justify-center space-x-8">
-          <NavItem isLoggedIn={isLoggedIn} />
+          <NavItem isLoggedIn={isLoggedIn} isAdmin={isAdmin} /> {/* Pass isAdmin prop */}
         </div>
 
         {/* Conditional Login/Signup or Sign Off Buttons */}
@@ -55,7 +55,8 @@ export function Navbar() {
       </div>
 
       {/* Mobile Menu */}
-      <NavMenu isMenuOpen={isMenuOpen} isLoggedIn={isLoggedIn} />
+      <NavMenu isMenuOpen={isMenuOpen} isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
+
     </nav>
   );
 }

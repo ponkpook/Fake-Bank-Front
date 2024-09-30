@@ -79,10 +79,10 @@ export const TransferBetweenAccounts: React.FC<
   };
 
   return (
-    <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
-      <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* 左侧账户选择 */}
-        <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
+        <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative ">
           <div className="relative p-space-4">
             <div className="text-black text-l font-normal font-['Poppins'] mb-space-4 mt-space-4">
               Select your account:
@@ -162,12 +162,14 @@ export const TransferBetweenAccounts: React.FC<
                 onChange={(e) => setTransferAmount(e.target.value)}
               />
             </div>
-            <button
-              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
-              onClick={handleConfirm}
-            >
-              Confirm
-            </button>
+            <div className="flex justify-end space-x-4">
+              <button
+                className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
+                onClick={handleConfirm}>
+                  Confirm
+                </button>
+
+            </div>
           </div>
         </div>
         {/* 弹窗组件，展示转账确认信息 */}

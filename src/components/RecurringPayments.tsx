@@ -98,8 +98,8 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
   };
 
   return (
-    <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
-      <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* Left Panel */}
         {/* Select Account */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
@@ -166,7 +166,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
           </div>
           <div className="mb-16 relative p-space-4">
             <button
-              className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
               onClick={() => setIsNewPayee(true)} // Show the popup
               disabled={!selectedAccount}
             >
@@ -211,7 +211,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
               </div>
               <button
                 type="submit"
-                className="bg-native-red text-white py-2 px-4 rounded-full"
+                className="bg-native-red text-white py-2 px-4 rounded-full font-medium font-['Poppins'] hover:bg-orange-600"
               >
                 Save Payee
               </button>
@@ -299,7 +299,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
             </div>
 
             <button
-              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
               onClick={handleConfirm}
             >
               Confirm
