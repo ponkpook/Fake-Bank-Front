@@ -50,8 +50,7 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
 
   // Handle navigation when the "Show" button is clicked
   const handleShowClick = () => {
-    // Optionally, you could pass the selected account as state or through the URL
-    navigate("/transaction-history"); // Navigate to the transaction-history page
+    navigate("/transaction-history", { state: { selectedAccount } }); // Pass selected account to transaction-history
   };
   return (
     <Container>
@@ -90,6 +89,12 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
                 {/* Dropdown for account selection */}
                 {isAccountDropdownOpen && (
                   <div className="absolute top-full mt-2 w-full bg-white shadow-lg z-10">
+                    <button
+                      className="w-full text-left px-4 py-2 hover:bg-gray-200 cursor-pointer"
+                      onClick={() => handleAccountChange("All")}
+                    >
+                      All accounts
+                    </button>
                     {accounts.map((account) => (
                       <button
                         key={account.accNo}

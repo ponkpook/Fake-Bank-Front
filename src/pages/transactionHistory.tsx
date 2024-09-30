@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const transactionData = [
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -27,14 +27,14 @@ const transactionData = [
   //test
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -48,14 +48,14 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -69,14 +69,14 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -90,14 +90,14 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -107,13 +107,26 @@ export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
   const navigate = useNavigate();
+  const location = useLocation(); // 获取传递的 state
+
+  const selectedAccount = location.state?.selectedAccount || "All"; // 获取传递的账户或默认显示 "All"
+  // 过滤交易数据
+  const filteredTransactions =
+    selectedAccount === "All"
+      ? transactionData // 显示所有交易
+      : transactionData.filter(
+          (transaction) => transaction.From === selectedAccount
+        ); // 过滤特定账户的交易
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = transactionData.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredTransactions.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
 
   // total page count
-  const totalPages = Math.ceil(transactionData.length / usersPerPage);
+  const totalPages = Math.ceil(filteredTransactions.length / usersPerPage);
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
@@ -211,7 +224,8 @@ export const TransactionHistory = () => {
     <Container>
       <div className="container mx-auto p-6 ">
         <h5 className="font-prosto mt-2 ">
-          Transaction History - Bank Account Name##
+          Transaction History -{" "}
+          {selectedAccount === "All" ? "All Accounts" : selectedAccount}
         </h5>
         <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 min-h-[80vh] ">
           <table className="w-full text-sm text-left text-gray-600 font-prosto">
@@ -254,7 +268,7 @@ export const TransactionHistory = () => {
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-700 font-prosto">
             Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
-            {transactionData.length} entries
+            {filteredTransactions.length} entries
           </span>
           <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
           <button
