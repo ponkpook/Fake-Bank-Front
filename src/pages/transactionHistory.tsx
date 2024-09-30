@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
+
 const transactionData = [
   {
     id: 1,
@@ -100,8 +101,11 @@ const transactionData = [
     Amount: 150,
     Date: "15/12/1212",
   },
- 
+
 ];
+
+
+
 export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;

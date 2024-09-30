@@ -1,17 +1,46 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import GreetingSection from "../components/GreetingSection";
 import { IAccount } from "../type";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { userID } from "./viewaccount";
 
 interface TransactionSelectProps {
     accounts: IAccount[];
 }
 
-export const TransactionSelect: React.FC<TransactionSelectProps> = ({ accounts }) => {
+export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
+    // State for storing accounts and other selections
+    const [accounts, setAccounts] = useState<IAccount[]>([]);
     const [selectedAccount, setSelectedAccount] = useState<string>(""); // State for selected account
     const [isAccountDropdownOpen, setIsAccountDropdownOpen] = useState<boolean>(false);
     const navigate = useNavigate(); // Initialize useNavigate
+
+    // useEffect to load accounts from localStorage
+    useEffect(() => {
+        let storageAccounts = localStorage.getItem(userID);
+        if (storageAccounts) {
+            setAccounts(JSON.parse(storageAccounts));
+        } else {
+            // Set default accounts if no accounts are found in localStorage
+            setAccounts([
+                {
+                    name: "Everyday Account",
+                    bsb: "010-010",
+                    accNo: "1234 5678",
+                    image: "/assets/number1.png",
+                    balance: "$100.00",
+                },
+                {
+                    name: "NetBank Saving",
+                    bsb: "010-010",
+                    accNo: "1234 5678",
+                    image: "/assets/number2.png",
+                    balance: "$1000.00",
+                },
+            ]);
+        }
+    }, []);
 
     // Handle account selection from dropdown
     const handleAccountChange = (account: string) => {
@@ -74,7 +103,7 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = ({ accounts }
                             </div>
                             <div className="flex justify-end space-x-4 mt-10">
                                 <button
-                                    className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
+                                    className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-2 px-6 rounded-full hover:bg-orange-600"
                                     onClick={handleShowClick} // Add click handler for navigation
                                 >
                                     Show
