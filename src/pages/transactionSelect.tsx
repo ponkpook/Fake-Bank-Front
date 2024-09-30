@@ -9,9 +9,11 @@ interface TransactionSelectProps {
   accounts: IAccount[];
 }
 
-export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
+export const TransactionSelect: React.FC<TransactionSelectProps> = ({
+  accounts,
+}) => {
   // State for storing accounts and other selections
-  const [accounts, setAccounts] = useState<IAccount[]>([]);
+  const [accountsState, setAccounts] = useState<IAccount[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<string>(""); // State for selected account
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
@@ -19,9 +21,8 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
 
   // useEffect to load accounts from localStorage
   useEffect(() => {
-    let storageAccounts = localStorage.getItem(userID);
-    if (storageAccounts) {
-      setAccounts(JSON.parse(storageAccounts));
+    if (accounts && accounts.length > 0) {
+      setAccounts(accounts);
     } else {
       // Set default accounts if no accounts are found in localStorage
       setAccounts([
@@ -41,7 +42,7 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
         },
       ]);
     }
-  }, []);
+  }, [accounts]);
   // Handle account selection from dropdown
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -95,7 +96,7 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = () => {
                     >
                       All accounts
                     </button>
-                    {accounts.map((account) => (
+                    {accountsState.map((account) => (
                       <button
                         key={account.accNo}
                         className="w-full text-left px-4 py-2 hover:bg-gray-200 cursor-pointer"

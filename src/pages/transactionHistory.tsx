@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
-const transactionData = [
+export const transactionData = [
   {
     id: 1,
     From: "Everyday Account",
@@ -105,6 +105,7 @@ const transactionData = [
     Date: "15/12/1212",
   },
 ];
+
 export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;

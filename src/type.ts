@@ -5,3 +5,11 @@ export interface IAccount {
   image: string;
   balance: string;
 }
+
+// export interface ITransaction {
+//   id: number;
+//   From: string;
+//   To: string;
+//   Amount: number;
+//   Date: string;
+// }
