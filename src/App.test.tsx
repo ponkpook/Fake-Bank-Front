@@ -1,5 +1,6 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom"; // 使用 MemoryRouter 来控制路径
 import { App } from "./App";
 
@@ -51,5 +52,7 @@ test("renders Transaction page on /transaction route", () => {
       <App />
     </MemoryRouter>
   );
-  expect(screen.getByText("Transaction History")).toBeInTheDocument();
+  expect(
+    screen.getByText("Check your recent transaction history!")
+  ).toBeInTheDocument();
 });

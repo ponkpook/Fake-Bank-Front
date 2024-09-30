@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
+import { useNavigate } from "react-router-dom";
 
 const transactionData = [
   {
@@ -101,14 +102,11 @@ const transactionData = [
     Amount: 150,
     Date: "15/12/1212",
   },
-
 ];
-
-
-
 export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+  const navigate = useNavigate();
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
@@ -197,7 +195,9 @@ export const TransactionHistory = () => {
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
         className={`px-3 py-1 rounded ${
-          currentPage === totalPages ? "bg-teal-green text-white" : "bg-gray-200"
+          currentPage === totalPages
+            ? "bg-teal-green text-white"
+            : "bg-gray-200"
         }`}
       >
         {totalPages}
@@ -210,7 +210,9 @@ export const TransactionHistory = () => {
   return (
     <Container>
       <div className="container mx-auto p-6 ">
-        <h5 className="font-prosto mt-2 ">Transaction History - Bank Account Name##</h5>
+        <h5 className="font-prosto mt-2 ">
+          Transaction History - Bank Account Name##
+        </h5>
         <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 min-h-[80vh] ">
           <table className="w-full text-sm text-left text-gray-600 font-prosto">
             <thead className="text-xs text-gray-700 font-prosto uppercase shadow-md">
@@ -230,20 +232,20 @@ export const TransactionHistory = () => {
                   <td className="w-1/5 py-3 text-center">{user.To}</td>
                   <td className="w-1/5 py-3 text-center">${user.Amount}</td>
                   <td className="w-1/5 py-3 text-center">{user.Date}</td>
-                  
                 </tr>
               ))}
               {/* Placeholder for additional rows to maintain consistent height */}
-              {currentUsers.length < 8 && (
-                    Array.from({ length: 8 - currentUsers.length }).map((_, idx) => (
-                        <tr key={`placeholder-${idx}`} className="border-b ">
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center"></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                        </tr>
-                    ))
+              {currentUsers.length < 8 &&
+                Array.from({ length: 8 - currentUsers.length }).map(
+                  (_, idx) => (
+                    <tr key={`placeholder-${idx}`} className="border-b ">
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center"></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                    </tr>
+                  )
                 )}
             </tbody>
           </table>
@@ -255,6 +257,12 @@ export const TransactionHistory = () => {
             {transactionData.length} entries
           </span>
           <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
+          <button
+            className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-2 px-6 rounded-full hover:bg-orange-600"
+            onClick={() => navigate(-1)} // return to account selection
+          >
+            Back
+          </button>
         </div>
       </div>
     </Container>
