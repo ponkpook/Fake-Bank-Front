@@ -171,11 +171,14 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
             show={isPopupVisible}
             handleClose={
               () => {
-                axios.post(`http://localhost:3001/user/${userID}/transfer`,{
-                    fromAccount: selectedAccount,
-                    toAccount: selectedTransferTo,
-                    amount: Number(transferAmount)
+                axios.post(`http://localhost:3001/user/${userID}/transfer`, {
+                  fromAccount: selectedAccount,
+                  toAccount: selectedTransferTo,
+                  amount: Number(transferAmount)
+                }).then(response => {
+                  console.log(response);
                 });
+
                 console.log("Transfer successful!");
                 console.log("From: ", selectedAccount);
                 console.log("To: ", selectedTransferTo);
