@@ -6,13 +6,13 @@ const SignUpAndInButtons: React.FC = () => {
         <div className="hidden md:flex space-x-4">
         <Link
             to="/login"
-            className="bg-transparent text-black rounded-full font-light px-space-4 py-space-2 shadow-lg hover:bg-native-milk/50 transition"
+            className="bg-transparent text-black rounded-full font-medium font-['Poppins'] px-space-4 py-space-2 shadow-lg hover:bg-native-milk/50 transition"
         >
             Log In
         </Link>
         <Link
             to="/signup"
-            className="bg-native-red rounded-full text-black font-light px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition"
+            className="bg-native-red rounded-full text-black font-medium font-['Poppins'] px-space-4 py-space-2 shadow-lg hover:bg-orange-600 transition"
         >
             Sign Up
         </Link>
