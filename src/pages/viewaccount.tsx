@@ -5,11 +5,14 @@ import { IAccount } from "../type";
 import { ModalAdmin } from "../components/modal-admin";
 import axios from "axios";
 
-// export const userID = "admin1"; // string
 export const Viewaccount = () => {
-  const userID = sessionStorage.getItem("username");
+  var userID = sessionStorage.getItem("username");
   useEffect(() => {
     console.log("userID:", userID);
+    while (userID === null) {
+      userID = sessionStorage.getItem("username");
+    }
+      
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)
       .then((response) => {

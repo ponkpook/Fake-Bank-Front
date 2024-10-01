@@ -13,7 +13,6 @@ export const Admin = () => {
         <div>
             <div className="flex flex-row">
             <div className="flex w-[100%]">
-                
                 {/* admin */}
                 {isAdmin && <ModalAdmin />}
             </div>

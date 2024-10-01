@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 
-const userID = sessionStorage.getItem("username");
+var userID = sessionStorage.getItem("username");
 
 interface TransferBetweenAccountsProps {
   accounts: IAccount[];
@@ -20,6 +20,9 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
   useEffect(() => {
     const fetchAccounts = async () => {
       try {
+        while (userID === null) {
+          userID = sessionStorage.getItem("username");
+        }
         const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${userID}/accounts`);
         for(var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
