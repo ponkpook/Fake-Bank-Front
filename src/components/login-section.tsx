@@ -4,7 +4,7 @@ import SignUpAndInButtonsReverse from './SignUpAndInButtonsReverse';
 import SignOffButton from './SignOffButton';
 
 export function LoginSection() {
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
 
   return (
     <div className="bg-native-milk rounded-[40px] flex flex-col items-center justify-center shadow-lg">

@@ -3,7 +3,6 @@ import { Container } from "../components/container";
 import GreetingSection from "../components/GreetingSection";
 import { IAccount } from "../type";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import { userID } from "./viewaccount";
 
 interface TransactionSelectProps {
   accounts: IAccount[];

@@ -6,28 +6,10 @@ import { ModalAdmin } from "../components/modal-admin";
 import axios from "axios";
 
 // export const userID = "admin1"; // string
-export const userID = "user1"; // string
 export const Viewaccount = () => {
-  // const [isAdmin, setIsAdmin] = useState(true);
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:3001/user/${userID}/accounts`)
-  //     .then((response) => {
-  //       var accounts = [];
-  //       for (var i = 0; i < Math.min(response.data.length, 5); i++) {
-  //         accounts.push({
-  //           name: response.data[i].accountName,
-  //           bsb: response.data[i].BSB,
-  //           accNo: response.data[i].accountNumber,
-  //           image: `/assets/number${i + 1}.png`,
-  //           balance: `$${response.data[i].balance}`,
-  //         });
-  //       }
-  //       setAccounts(accounts);
-  //     });
-  // }, []);
-
+  const userID = sessionStorage.getItem("username");
   useEffect(() => {
+    console.log("userID:", userID);
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)
       .then((response) => {

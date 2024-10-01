@@ -6,9 +6,9 @@ import SignOffButton from "./SignOffButton";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Set as true for testing
+  //const [isLoggedIn, setIsLoggedIn] = useState(false); // Set as true for testing
   const [isAdmin, setIsAdmin] = useState(false); // Assume user is admin for testing
-
+  const isLoggedIn = sessionStorage.getItem("username") !== null;
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
 
   return (

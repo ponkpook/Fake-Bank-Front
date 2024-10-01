@@ -39,7 +39,7 @@ export const ModalLogin = () => {
         if (response.data.success) {
           console.log("Login successful:", response.data);
           // store userID
-          localStorage.setItem("userID", username);
+          sessionStorage.setItem("username", username);
           navigate("/accounts");
         } else {
           setError("Invalid username or password");
