@@ -9,21 +9,41 @@ import axios from "axios";
 export const userID = "user1"; // string
 export const Viewaccount = () => {
   // const [isAdmin, setIsAdmin] = useState(true);
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:3001/user/${userID}/accounts`)
+  //     .then((response) => {
+  //       var accounts = [];
+  //       for (var i = 0; i < Math.min(response.data.length, 5); i++) {
+  //         accounts.push({
+  //           name: response.data[i].accountName,
+  //           bsb: response.data[i].BSB,
+  //           accNo: response.data[i].accountNumber,
+  //           image: `/assets/number${i + 1}.png`,
+  //           balance: `$${response.data[i].balance}`,
+  //         });
+  //       }
+  //       setAccounts(accounts);
+  //     });
+  // }, []);
+
   useEffect(() => {
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)
       .then((response) => {
-        var accounts = [];
-        for (var i = 0; i < Math.min(response.data.length, 5); i++) {
-          accounts.push({
-            name: response.data[i].accountName,
-            bsb: response.data[i].BSB,
-            accNo: response.data[i].accountNumber,
+        const accountsData = response.data
+          .slice(0, 5)
+          .map((account: any, i: number) => ({
+            name: account.accountName,
+            bsb: account.BSB,
+            accNo: account.accountNumber,
             image: `/assets/number${i + 1}.png`,
-            balance: `$${response.data[i].balance}`,
-          });
-        }
-        setAccounts(accounts);
+            balance: `$${account.balance}`,
+          }));
+        setAccounts(accountsData);
+      })
+      .catch((error) => {
+        console.error("Error fetching accounts:", error);
       });
   }, []);
 
@@ -80,13 +100,13 @@ export const Viewaccount = () => {
           <div className="flex w-[100%]">
             {/* Conditional rendering based on admin status */}
             {/* {!isAdmin && ( */}
-            {(
+            {
               <ModalAccounts
                 accounts={accounts}
                 onAddAccount={addAccount}
                 onTopUp={topUpAccount}
               />
-            )}
+            }
             {/* admin */}
             {/* {isAdmin && <ModalAdmin />} */}
           </div>

@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
+import { useLocation, useNavigate } from "react-router-dom";
+import jsPDF from "jspdf";
+import "jspdf-autotable";
 
-const transactionData = [
+export const transactionData = [
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -26,14 +29,14 @@ const transactionData = [
   //test
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -47,14 +50,14 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -68,14 +71,14 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
@@ -89,36 +92,47 @@ const transactionData = [
   },
   {
     id: 1,
-    From: "Everyday",
+    From: "Everyday Account",
     To: "Abc123",
     Amount: 100,
     Date: "12/12/1212",
   },
   {
     id: 2,
-    From: "Saving1",
+    From: "NetBank Saving",
     To: "Xyz456",
     Amount: 150,
     Date: "15/12/1212",
   },
-
 ];
-
-
 
 export const TransactionHistory = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
+  const navigate = useNavigate();
+  const location = useLocation(); // 获取传递的 state
+
+  const selectedAccount = location.state?.selectedAccount || "All"; // 获取传递的账户或默认显示 "All"
+  // 过滤交易数据
+  const filteredTransactions =
+    selectedAccount === "All"
+      ? transactionData // 显示所有交易
+      : transactionData.filter(
+          (transaction) => transaction.From === selectedAccount
+        ); // 过滤特定账户的交易
 
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = transactionData.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = filteredTransactions.slice(
+    indexOfFirstUser,
+    indexOfLastUser
+  );
 
   // total page count
-  const totalPages = Math.ceil(transactionData.length / usersPerPage);
+  const totalPages = Math.ceil(filteredTransactions.length / usersPerPage);
 
   const renderPageNumbers = () => {
-    const pageNumbers = [];
+    const pageNumbers: (JSX.Element | string)[] = [];
 
     // If there's only one page, render just one button
     if (totalPages === 1) {
@@ -197,7 +211,9 @@ export const TransactionHistory = () => {
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
         className={`px-3 py-1 rounded ${
-          currentPage === totalPages ? "bg-teal-green text-white" : "bg-gray-200"
+          currentPage === totalPages
+            ? "bg-teal-green text-white"
+            : "bg-gray-200"
         }`}
       >
         {totalPages}
@@ -207,10 +223,41 @@ export const TransactionHistory = () => {
     return pageNumbers;
   };
 
+  const downloadPDF = () => {
+    const doc = new jsPDF();
+    doc.text(
+      `Transaction History - ${
+        selectedAccount === "All" ? "All Accounts" : selectedAccount
+      }`,
+      14,
+      15
+    );
+
+    const tableColumn = ["ID", "From", "To", "Amount", "Date"];
+    const tableRows = filteredTransactions.map((transaction) => [
+      transaction.id,
+      transaction.From,
+      transaction.To,
+      `$${transaction.Amount}`,
+      transaction.Date,
+    ]);
+
+    (doc as any).autoTable({
+      head: [tableColumn],
+      body: tableRows,
+      startY: 20,
+    });
+
+    doc.save("transaction_history.pdf");
+  };
+
   return (
     <Container>
       <div className="container mx-auto p-6 ">
-        <h5 className="font-prosto mt-2 ">Transaction History - Bank Account Name##</h5>
+        <h5 className="font-prosto mt-2 ">
+          Transaction History -{" "}
+          {selectedAccount === "All" ? "All Accounts" : selectedAccount}
+        </h5>
         <div className="flex flex-col md:flex-row  mx-auto bg-native-milk shadow-lg my-4 min-h-[80vh] ">
           <table className="w-full text-sm text-left text-gray-600 font-prosto">
             <thead className="text-xs text-gray-700 font-prosto uppercase shadow-md">
@@ -230,20 +277,20 @@ export const TransactionHistory = () => {
                   <td className="w-1/5 py-3 text-center">{user.To}</td>
                   <td className="w-1/5 py-3 text-center">${user.Amount}</td>
                   <td className="w-1/5 py-3 text-center">{user.Date}</td>
-                  
                 </tr>
               ))}
               {/* Placeholder for additional rows to maintain consistent height */}
-              {currentUsers.length < 8 && (
-                    Array.from({ length: 8 - currentUsers.length }).map((_, idx) => (
-                        <tr key={`placeholder-${idx}`} className="border-b ">
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center"></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                            <td className="w-1/5 py-3 text-center "></td>
-                        </tr>
-                    ))
+              {currentUsers.length < 8 &&
+                Array.from({ length: 8 - currentUsers.length }).map(
+                  (_, idx) => (
+                    <tr key={`placeholder-${idx}`} className="border-b ">
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center"></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                      <td className="w-1/5 py-3 text-center "></td>
+                    </tr>
+                  )
                 )}
             </tbody>
           </table>
@@ -252,10 +299,24 @@ export const TransactionHistory = () => {
         <div className="flex justify-between items-center mt-4">
           <span className="text-sm text-gray-700 font-prosto">
             Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
-            {transactionData.length} entries
+            {filteredTransactions.length} entries
           </span>
           <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
+          <button
+            className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-2 px-6 rounded-full hover:bg-orange-600"
+            onClick={() => navigate(-1)} // 返回账户选择页面
+          >
+            Back
+          </button>
         </div>
+
+        {/* 悬浮圆形按钮 */}
+        <button
+          className="fixed mt-16 top-10 right-5 bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
+          onClick={downloadPDF}
+        >
+          Download PDF
+        </button>
       </div>
     </Container>
   );
