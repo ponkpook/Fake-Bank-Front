@@ -7,6 +7,7 @@ import axios from "axios";
 
 export const Viewaccount = () => {
   var userID = sessionStorage.getItem("username");
+  const [isAdmin, setIsAdmin] = useState(false);
   useEffect(() => {
     console.log("userID:", userID);
     while (userID === null) {
@@ -79,24 +80,23 @@ export const Viewaccount = () => {
   };
 
   return (
-    <Container>
-      <div>
-        <div className="flex flex-row">
-          <div className="flex w-[100%]">
-            {/* Conditional rendering based on admin status */}
-            {/* {!isAdmin && ( */}
-            {
-              <ModalAccounts
-                accounts={accounts}
-                onAddAccount={addAccount}
-                onTopUp={topUpAccount}
-              />
-            }
-            {/* admin */}
-            {/* {isAdmin && <ModalAdmin />} */}
-          </div>
+  <Container>
+    <div>
+      <div className="flex flex-row">
+        <div className="flex w-[100%]">
+          {/* Conditional rendering based on admin status */}
+          {!isAdmin ? (
+            <ModalAccounts
+              accounts={accounts}
+              onAddAccount={addAccount}
+              onTopUp={topUpAccount}
+            />
+          ) : (
+            <ModalAdmin />
+          )}
         </div>
       </div>
-    </Container>
-  );
+    </div>
+  </Container>
+);
 };

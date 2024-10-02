@@ -26,7 +26,7 @@ export const Transfer: React.FC = () => {
         balance: "$1000.00",
       },
     ]);
-  }
+  },[]
 );
 
   const [accounts, setAccounts] = useState<IAccount[]>([]);

@@ -27,3 +27,10 @@ export interface backEndUserAccount {
   BSB: string;
   balance: number;
 }
+
+export interface backEndPayee {
+  username: string;
+  payeeName: string;
+  accountNumber: string;
+  payeeBSB: string;
+}

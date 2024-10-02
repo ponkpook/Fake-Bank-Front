@@ -3,14 +3,19 @@ import { IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
 import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backEndUserAccount } from "../type";
 
 interface BPayProps {
   accounts: IAccount[];
 }
 
-export const BPay: React.FC<BPayProps> = ({ accounts }) => {
+var username = sessionStorage.getItem("username");
+
+export const BPay: React.FC<BPayProps> = () => {
   //const accounts = ["Smart Access", "NetBank Saver"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] = useState<string>("");
   const [billerName, setBillerName] = useState<string>(""); // 追踪biller name
   const [billerCode, setBillerCode] = useState<string>(""); // 追踪biller code
   const [referenceNumber, setReferenceNumber] = useState<string>(""); // 追踪reference number
@@ -50,6 +55,17 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
 
   // Simulate the transfer process and show result modal
   const handleTransfer = () => {
+    console.log("accountNumber: ", selectedAccountNumber);
+    axios.post(`http://localhost:3001/user/${username}/BPAY`,null,{
+      params: {
+        username: username,
+        accountNumber: selectedAccountNumber,
+        amount: Number(transferAmount),
+        billerCode: billerCode,
+        companyName: billerName,
+        referenceNumber: referenceNumber,
+      }
+    });
     const isSuccess = 1; // Randomly simulate success or failure
     setIsConfirmationVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
@@ -71,6 +87,37 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
     setIsResultVisible(false);
     navigate("/accounts"); // Redirect when user manually closes the modal
   };
+
+  // back-end ---------------------------------------------------------------
+  
+  const [accounts] = useState<IAccount[]>([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${username}/accounts`);
+        for(var i = 0; i < Math.min(response.data.length, 5); i++) {
+          accounts.push({
+            name: response.data[i].accountName,
+            bsb: response.data[i].BSB,
+            accNo: response.data[i].accountNumber,
+            image: "null",
+            balance: response.data[i].balance.toString(),
+          });
+        }
+        
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+
+
 
   return (
     <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
@@ -96,10 +143,13 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                     <button
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account.name)}
+                      onClick={() => {
+                        handleAccountChange(account.name);
+                        setSelectedAccountNumber(account.accNo);
+                       }}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
-                      {account.accNo})
+                      {account.accNo}, Balance: {account.balance})
                     </button>
                   ))}
                 </div>

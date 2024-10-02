@@ -44,6 +44,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
 
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
+
+  const [selectedAccountNumber, setSelectedAccountNumber] = useState<string>("");
+  const [selectedTransferToNumber, setSelectedTransferToNumber] = useState<string>("");
+
   const [transferAmount, setTransferAmount] = useState<string>("");
   const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
 
@@ -74,7 +78,7 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
 
   // 过滤出可用的转账目标账户（不能转账给自己）
   const availableTransferToOptions = accounts.filter(
-    (account) => account.accNo !== selectedAccount
+    (account) => account.name !== selectedAccount
   );
   
 
@@ -87,6 +91,18 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
   };
 
   const handleTransfer = () => {
+     axios.post(`http://localhost:3001/user/${userID}/transfer`, {
+                  fromAccount: selectedAccountNumber,
+                  toAccount: selectedTransferToNumber,
+                  amount: Number(transferAmount)
+                }).then(response => {
+                  console.log(response);
+                });
+                
+                console.log("Transfer successful!");
+                console.log("From: ", selectedAccount);
+                console.log("To: ", selectedTransferTo);
+                console.log("Amount: ", transferAmount);
     // Simulate transfer logic, 1 = success, 0 = failure
     const isSuccess = 1;
     setIsPopupVisible(false); // Close confirmation modal
@@ -135,7 +151,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
                     <button
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account.accNo)}
+                      onClick={() => {
+                        handleAccountChange(account.name);
+                        setSelectedAccountNumber(account.accNo);
+                      }}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
                       {account.accNo}, Balance: {account.balance})
@@ -172,7 +191,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
                       <button
                         key={account.accNo}
                         className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => handleTransferToChange(account.accNo)}
+                        onClick={() => {
+                          handleTransferToChange(account.name);
+                          setSelectedTransferToNumber(account.accNo);
+                        }}
                       >
                         {account.name} (BSB: {account.bsb}, Account:{" "}
                         {account.accNo}, Balance: {account.balance})
@@ -211,18 +233,6 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
             show={isPopupVisible}
             handleClose={
               () => {
-                axios.post(`http://localhost:3001/user/${userID}/transfer`, {
-                  fromAccount: selectedAccount,
-                  toAccount: selectedTransferTo,
-                  amount: Number(transferAmount)
-                }).then(response => {
-                  console.log(response);
-                });
-
-                console.log("Transfer successful!");
-                console.log("From: ", selectedAccount);
-                console.log("To: ", selectedTransferTo);
-                console.log("Amount: ", transferAmount);
                 setIsPopupVisible(false)
               }
             }
