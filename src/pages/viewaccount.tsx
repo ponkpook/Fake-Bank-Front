@@ -7,13 +7,17 @@ import axios from "axios";
 
 export const Viewaccount = () => {
   var userID = sessionStorage.getItem("username");
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(Boolean);
   useEffect(() => {
     console.log("userID:", userID);
     while (userID === null) {
       userID = sessionStorage.getItem("username");
     }
-      
+    if (userID === "admin1") {
+      setIsAdmin(true);
+    } else {
+      setIsAdmin(false);
+    }
     axios
       .get(`http://localhost:3001/user/${userID}/accounts`)
       .then((response) => {

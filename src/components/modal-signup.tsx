@@ -41,6 +41,7 @@ export const ModalSignup = () => {
       .then((response) => {
         if (response.data.success) {
           console.log("Register success:", response.data);
+          sessionStorage.setItem("username", username);
           navigate("/accounts");
         } else {
           console.log("Register failed:", response.data);
