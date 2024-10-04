@@ -1,14 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
+import TransferResultModal from "./TransferResultModal";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backEndUserAccount } from "../type";
 
 interface BPayProps {
   accounts: IAccount[];
 }
 
-export const BPay: React.FC<BPayProps> = ({ accounts }) => {
+var username = sessionStorage.getItem("username");
+
+export const BPay: React.FC<BPayProps> = () => {
   //const accounts = ["Smart Access", "NetBank Saver"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] = useState<string>("");
   const [billerName, setBillerName] = useState<string>(""); // 追踪biller name
   const [billerCode, setBillerCode] = useState<string>(""); // 追踪biller code
   const [referenceNumber, setReferenceNumber] = useState<string>(""); // 追踪reference number
@@ -18,6 +25,14 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
 
   const [isConfirmationVisible, setIsConfirmationVisible] =
     useState<boolean>(false);
+
+  // State for result modal
+  const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
+  const [transferStatus, setTransferStatus] = useState<"success" | "fail">(
+    "success"
+  );
+
+  const navigate = useNavigate();
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -38,9 +53,75 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
     }
   };
 
+  // Simulate the transfer process and show result modal
+  const handleTransfer = () => {
+    console.log("accountNumber: ", selectedAccountNumber);
+    axios.post(`http://localhost:3001/user/${username}/BPAY`,null,{
+      params: {
+        username: username,
+        accountNumber: selectedAccountNumber,
+        amount: Number(transferAmount),
+        billerCode: billerCode,
+        companyName: billerName,
+        referenceNumber: referenceNumber,
+      }
+    });
+    const isSuccess = 1; // Randomly simulate success or failure
+    setIsConfirmationVisible(false); // Close confirmation modal
+    setTransferStatus(isSuccess ? "success" : "fail");
+    setIsResultVisible(true); // Show result modal
+  };
+
+  useEffect(() => {
+    if (isResultVisible) {
+      const timeout = setTimeout(() => {
+        setIsResultVisible(false);
+        navigate("/accounts"); // Redirect to "View Accounts" page
+      }, 3000); // 10 seconds
+      return () => clearTimeout(timeout); // Clear timeout if component unmounts
+    }
+  }, [isResultVisible, navigate]);
+
+  // Handle manual closing of the result modal
+  const handleClose = () => {
+    setIsResultVisible(false);
+    navigate("/accounts"); // Redirect when user manually closes the modal
+  };
+
+  // back-end ---------------------------------------------------------------
+  
+  const [accounts] = useState<IAccount[]>([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${username}/accounts`);
+        for(var i = 0; i < Math.min(response.data.length, 5); i++) {
+          accounts.push({
+            name: response.data[i].accountName,
+            bsb: response.data[i].BSB,
+            accNo: response.data[i].accountNumber,
+            image: "null",
+            balance: response.data[i].balance.toString(),
+          });
+        }
+        
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+
+
+
   return (
-    <div className="flex max-w-[1328px] justify-center p-space-8 bg-light-green">
-      <div className="flex space-x-8 w-full mt-space-4 mb-space-8">
+    <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
+      <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 md:space-x-8 w-full mt-space-4 mb-space-8">
         {/* Left Panel */}
         <div className="flex-1 bg-native-milk rounded-[40px] p-space-4 relative">
           <div className="relative p-space-4">
@@ -62,10 +143,13 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
                     <button
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account.name)}
+                      onClick={() => {
+                        handleAccountChange(account.name);
+                        setSelectedAccountNumber(account.accNo);
+                       }}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
-                      {account.accNo})
+                      {account.accNo}, Balance: {account.balance})
                     </button>
                   ))}
                 </div>
@@ -132,7 +216,7 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
               />
             </div>
             <button
-              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full"
+              className="absolute bottom-space-4 right-space-4 bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
               onClick={handleConfirm}
             >
               Confirm
@@ -146,6 +230,14 @@ export const BPay: React.FC<BPayProps> = ({ accounts }) => {
         amount={transferAmount}
         recipient={billerName} // 使用billerName作为接收人
         fromAccount={selectedAccount}
+        onConfirm={handleTransfer}
+      />
+
+      {/* Result Modal */}
+      <TransferResultModal
+        show={isResultVisible}
+        status={transferStatus}
+        handleClose={handleClose}
       />
     </div>
   );

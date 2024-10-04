@@ -22,7 +22,7 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
       {/* Account Information Section */}
       <div className="flex flex-col w-full md:w-[60%] p-5 mt-4">
         <div className="font-prosto text-xxxl text-center md:text-left mb-10">
-          Welcome Back, Username
+          Welcome Back, {sessionStorage.getItem("username")}!
         </div>
         {accounts.map((account, index) => (
           <div
