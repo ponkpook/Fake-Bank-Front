@@ -5,6 +5,7 @@ import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
+import config from "../config";
 
 var userID = sessionStorage.getItem("username");
 
@@ -12,9 +13,9 @@ interface TransferBetweenAccountsProps {
   accounts: IAccount[];
 }
 
-
-export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = () => {
-
+export const TransferBetweenAccounts: React.FC<
+  TransferBetweenAccountsProps
+> = () => {
   const [accounts] = useState<IAccount[]>([]);
 
   useEffect(() => {
@@ -23,8 +24,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
         while (userID === null) {
           userID = sessionStorage.getItem("username");
         }
-        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${userID}/accounts`);
-        for(var i = 0; i < Math.min(response.data.length, 5); i++) {
+        const response = await axios.get<backEndUserAccount[]>(
+          `${config.API_BASE_URL}/api/data/user/${userID}/accounts`
+        );
+        for (var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
             name: response.data[i].accountName,
             bsb: response.data[i].BSB,
@@ -33,7 +36,6 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
             balance: response.data[i].balance.toString(),
           });
         }
-        
       } catch (error) {
         console.error("Error fetching accounts:", error);
       }
@@ -45,8 +47,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
 
-  const [selectedAccountNumber, setSelectedAccountNumber] = useState<string>("");
-  const [selectedTransferToNumber, setSelectedTransferToNumber] = useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] =
+    useState<string>("");
+  const [selectedTransferToNumber, setSelectedTransferToNumber] =
+    useState<string>("");
 
   const [transferAmount, setTransferAmount] = useState<string>("");
   const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
@@ -55,7 +59,6 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
     useState<boolean>(false);
   const [isTransferToDropdownOpen, setIsTransferToDropdownOpen] =
     useState<boolean>(false);
-  
 
   // State for result modal
   const [isResultVisible, setIsResultVisible] = useState<boolean>(false);
@@ -80,7 +83,6 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
   const availableTransferToOptions = accounts.filter(
     (account) => account.name !== selectedAccount
   );
-  
 
   const handleConfirm = () => {
     if (selectedAccount && selectedTransferTo && transferAmount) {
@@ -91,18 +93,20 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
   };
 
   const handleTransfer = () => {
-     axios.post(`http://localhost:3001/user/${userID}/transfer`, {
-                  fromAccount: selectedAccountNumber,
-                  toAccount: selectedTransferToNumber,
-                  amount: Number(transferAmount)
-                }).then(response => {
-                  console.log(response);
-                });
-                
-                console.log("Transfer successful!");
-                console.log("From: ", selectedAccount);
-                console.log("To: ", selectedTransferTo);
-                console.log("Amount: ", transferAmount);
+    axios
+      .post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
+        fromAccount: selectedAccountNumber,
+        toAccount: selectedTransferToNumber,
+        amount: Number(transferAmount),
+      })
+      .then((response) => {
+        console.log(response);
+      });
+
+    console.log("Transfer successful!");
+    console.log("From: ", selectedAccount);
+    console.log("To: ", selectedTransferTo);
+    console.log("Amount: ", transferAmount);
     // Simulate transfer logic, 1 = success, 0 = failure
     const isSuccess = 1;
     setIsPopupVisible(false); // Close confirmation modal
@@ -220,10 +224,10 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
             <div className="flex justify-end space-x-4">
               <button
                 className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
-                onClick={handleConfirm}>
-                  Confirm
-                </button>
-
+                onClick={handleConfirm}
+              >
+                Confirm
+              </button>
             </div>
           </div>
         </div>
@@ -231,11 +235,9 @@ export const TransferBetweenAccounts: React.FC<TransferBetweenAccountsProps> = (
         {isPopupVisible && (
           <TransferConfirmationModal
             show={isPopupVisible}
-            handleClose={
-              () => {
-                setIsPopupVisible(false)
-              }
-            }
+            handleClose={() => {
+              setIsPopupVisible(false);
+            }}
             amount={transferAmount}
             recipient={selectedTransferTo}
             fromAccount={selectedAccount} // Pass the selected "from" account

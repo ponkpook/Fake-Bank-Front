@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { backEndUserAccount } from "../type";
 import { backEndPayee } from "../type";
+import config from "../config";
 
 var username = sessionStorage.getItem("username");
 
@@ -14,14 +15,18 @@ interface TransferToOthersProps {
   accounts: IAccount[];
 }
 
-export const TransferToOthers: React.FC<TransferToOthersProps> = ({
-  //accounts,
-}) => {
-  const [existingPayees, setExistingPayees] = useState<backEndPayee[]>([]); 
+export const TransferToOthers: React.FC<TransferToOthersProps> = (
+  {
+    //accounts,
+  }
+) => {
+  const [existingPayees, setExistingPayees] = useState<backEndPayee[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
-  const [selectedAccountNumber, setSelectedAccountNumber] = useState<string>("");
-  const [selectedTransferToNumber, setSelectedTransferToNumber] = useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] =
+    useState<string>("");
+  const [selectedTransferToNumber, setSelectedTransferToNumber] =
+    useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>("");
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
@@ -42,20 +47,22 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
     while (username == null) {
       username = sessionStorage.getItem("username");
     }
-    const response = await axios.get(`http://localhost:3001/user/${username}/getPayees`, { params: { username: username } });
+    const response = await axios.get(
+      `${config.API_BASE_URL}/user/${username}/getPayees`,
+      { params: { username: username } }
+    );
     var payees = [];
-    for (var i=0; i<response.data.length;i++) {
+    for (var i = 0; i < response.data.length; i++) {
       payees.push(response.data[i]);
     }
     setExistingPayees(payees);
     console.log("Payees fetched successfully");
   };
-  
-   // Fetch existing payees from the backend
+
+  // Fetch existing payees from the backend
   useEffect(() => {
     fetchPayees();
-  }, []); 
-
+  }, []);
 
   const handleAccountChange = (account: string) => {
     setSelectedAccount(account);
@@ -93,13 +100,15 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
     }
     console.log("fromAccount: ", selectedAccountNumber);
     console.log("toAccount: ", selectedTransferToNumber);
-    axios.post(`http://localhost:3001/user/${username}/transferToOthers`, {
-                  fromAccount: selectedAccountNumber,
-                  toAccount: selectedTransferToNumber,
-                  amount: Number(transferAmount)
-                }).then(response => {
-                  console.log(response);
-                });
+    axios
+      .post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
+        fromAccount: selectedAccountNumber,
+        toAccount: selectedTransferToNumber,
+        amount: Number(transferAmount),
+      })
+      .then((response) => {
+        console.log(response);
+      });
     const isSuccess = 1; // success popup =1, failure popup = 0
     setIsPopupVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
@@ -123,7 +132,6 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
     navigate("/accounts"); // Redirect when user manually closes the modal
   };
 
-
   const [payeeName, setPayeeName] = useState("");
   const [BSB, setBsb] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -133,21 +141,23 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
     while (username == null) {
       username = sessionStorage.getItem("username");
     }
-    const response = await axios.post(`http://localhost:3001/user/${username}/addPayee`, {
-      username: username,
-      payeeName: payeeName,
-      BSB: BSB,
-      accountNumber: accountNumber
-    });
+    const response = await axios.post(
+      `${config.API_BASE_URL}/user/${username}/addPayee`,
+      {
+        username: username,
+        payeeName: payeeName,
+        BSB: BSB,
+        accountNumber: accountNumber,
+      }
+    );
     if (response.data.success) {
       console.log("Payee added successfully");
     } else {
       console.log(response.data.message);
-    };
+    }
     setIsNewPayee(false); // Close the popup
-    fetchPayees(); 
+    fetchPayees();
   };
-
 
   // Fetch accounts from the backend ---------------------------
 
@@ -159,8 +169,10 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
         while (username === null) {
           username = sessionStorage.getItem("username");
         }
-        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${username}/accounts`);
-        for(var i = 0; i < Math.min(response.data.length, 5); i++) {
+        const response = await axios.get<backEndUserAccount[]>(
+          `${config.API_BASE_URL}/user/${username}/accounts`
+        );
+        for (var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
             name: response.data[i].accountName,
             bsb: response.data[i].BSB,
@@ -169,7 +181,6 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
             balance: response.data[i].balance.toString(),
           });
         }
-        
       } catch (error) {
         console.error("Error fetching accounts:", error);
       }
@@ -177,8 +188,6 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
 
     fetchAccounts();
   }, []);
-
-  
 
   return (
     <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
@@ -205,11 +214,10 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
                       onClick={() => {
-                          handleAccountChange(account.name);
-                          handleAccountChangeNumber(account.accNo);
-                          console.log("accountNumber: ",account.accNo);
-                        }
-                      }
+                        handleAccountChange(account.name);
+                        handleAccountChangeNumber(account.accNo);
+                        console.log("accountNumber: ", account.accNo);
+                      }}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
                       {account.accNo}, Balance: {account.balance})
@@ -299,7 +307,9 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
         </h2>
         <form>
           <div className="mb-4">
-            <label className="block text-sm font-medium font-['Poppins'] mb-2">Name:</label>
+            <label className="block text-sm font-medium font-['Poppins'] mb-2">
+              Name:
+            </label>
             <input
               type="text"
               className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
@@ -309,7 +319,9 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = ({
             />
           </div>
           <div className="mb-4">
-            <label className="block text-sm font-medium font-['Poppins'] mb-2">BSB:</label>
+            <label className="block text-sm font-medium font-['Poppins'] mb-2">
+              BSB:
+            </label>
             <input
               type="text"
               className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
+import config from "../config";
 
 export const ModalSignup = () => {
   const [username, setUsername] = useState("");
@@ -33,11 +34,13 @@ export const ModalSignup = () => {
       setPasswordError(validate.password);
       return;
     } else {
-      
     }
 
     axios
-      .post("http://localhost:3001/auth/register", { username, password })
+      .post(`${config.API_BASE_URL}/auth/register`, {
+        username,
+        password,
+      })
       .then((response) => {
         if (response.data.success) {
           console.log("Register success:", response.data);
@@ -70,9 +73,7 @@ export const ModalSignup = () => {
           className="flex flex-col gap-space-10 mx-auto w-full max-w-md"
         >
           <div className="flex justify-center mb-6">
-            <p className="font-prosto text-xxl font-bold">
-              Create an account
-            </p>
+            <p className="font-prosto text-xxl font-bold">Create an account</p>
           </div>
           <div className="flex flex-col gap-space-10">
             <div className="flex flex-col gap-space-3">
@@ -83,24 +84,34 @@ export const ModalSignup = () => {
                 type="text"
                 value={username}
                 onChange={handleUsernameChange}
-                className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${usernameError ? "border-red-500 border-2" : ""}`}
+                className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${
+                  usernameError ? "border-red-500 border-2" : ""
+                }`}
               />
-              {usernameError && <p className="text-red-500 text-sm mt-1">{usernameError}</p>}
+              {usernameError && (
+                <p className="text-red-500 text-sm mt-1">{usernameError}</p>
+              )}
             </div>
             <div className="flex flex-col gap-space-3">
               <p className="text-start font-poppins font-[200] text-l">
                 Enter password
               </p>
               <input
-                className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${passwordError ? "border-red-500 border-2" : ""}`}
+                className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${
+                  passwordError ? "border-red-500 border-2" : ""
+                }`}
                 type="password"
                 value={password}
                 onChange={handlePasswordChange}
               />
               <p className="font-poppins text-s text-black/50 text-center pt-space-2">
-                Please create a password that is at least 8 characters long and includes a mix of uppercase and lowercase letters for added security
+                Please create a password that is at least 8 characters long and
+                includes a mix of uppercase and lowercase letters for added
+                security
               </p>
-              {passwordError && <p className="text-red-500 text-sm mt-1">{passwordError}</p>}
+              {passwordError && (
+                <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+              )}
             </div>
             <div className="flex flex-col gap-space-5">
               <button className="bg-native-red rounded-full text-black font-poppins font-light px-[70px] py-space-4 shadow-lg hover:bg-orange-600 transition">

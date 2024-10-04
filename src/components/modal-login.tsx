@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
+import config from "../config";
 
 export const ModalLogin = () => {
   const [username, setUsername] = useState("");
@@ -34,7 +35,10 @@ export const ModalLogin = () => {
     }
 
     axios
-      .post("http://localhost:3001/auth/login", { username, password })
+      .post(`${config.API_BASE_URL}/auth/login`, {
+        username,
+        password,
+      })
       .then((response) => {
         if (response.data.success) {
           console.log("Login successful:", response.data);

@@ -45,6 +45,12 @@ yarn add react-countup react-chartjs-2 chart.js react-bootstrap bootstrap
 yarn add react-datepicker
 ```
 
+## jsPdf
+
+```
+yarn add jspdf
+```
+
 Git Flow 是一种常见的工作流方法，通常用于有多个发布周期和功能开发的项目。它使用了明确的分支命名和结构。
 
     •	main 或 master：这是主分支，通常代表生产环境的代码。

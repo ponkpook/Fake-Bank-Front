@@ -3,10 +3,10 @@ import axios from "axios";
 import { User, UserDisplay } from "../type";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
-
+import config from "../config";
 
 const fetchUserData = async (): Promise<UserDisplay[]> => {
-  const response = await axios.get<User[]>("http://localhost:3001/user");
+  const response = await axios.get<User[]>(`${config.API_BASE_URL}/user`);
   return response.data
     .filter((user) => user.isAdmin === false)
     .map((user, index) => ({
@@ -14,12 +14,10 @@ const fetchUserData = async (): Promise<UserDisplay[]> => {
       username: user.username,
       password: user.password,
       date: String(user.date),
-    })
-  );
+    }));
 };
 
 export const ModalAdmin = () => {
-
   const [usersData, setUsersData] = useState<UserDisplay[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
@@ -39,9 +37,11 @@ export const ModalAdmin = () => {
     try {
       const prevUsers = [...usersData];
       // Make API request to delete the user from the backend
-      await axios.delete(`http://localhost:3001/user/${username}`);
+      await axios.delete(`${config.API_BASE_URL}/users/${username}`);
       // Filter out the deleted user from the local state
-      setUsersData((prevUsers) => prevUsers.filter((user) => user.username !== username));
+      setUsersData((prevUsers) =>
+        prevUsers.filter((user) => user.username !== username)
+      );
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -57,8 +57,9 @@ export const ModalAdmin = () => {
         <button
           key={1}
           onClick={() => setCurrentPage(1)}
-          className={`px-3 py-1 rounded ${currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
-            }`}
+          className={`px-3 py-1 rounded ${
+            currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
         >
           1
         </button>
@@ -126,7 +127,9 @@ export const ModalAdmin = () => {
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
         className={`${buttonClass} ${
-          currentPage === totalPages ? "bg-teal-green text-white" : "bg-gray-200"
+          currentPage === totalPages
+            ? "bg-teal-green text-white"
+            : "bg-gray-200"
         }`}
       >
         {totalPages}
@@ -172,12 +175,13 @@ export const ModalAdmin = () => {
       </div>
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-700 font-prosto">
-          Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of {usersData.length} entries
+          Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
+          {usersData.length} entries
         </span>
         <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
       </div>
     </div>
   );
-}
-  
+};
+
 export default ModalAdmin;

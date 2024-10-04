@@ -4,6 +4,7 @@ import { ModalAccounts } from "../components/modal-accounts";
 import { IAccount } from "../type";
 import { ModalAdmin } from "../components/modal-admin";
 import axios from "axios";
+import config from "../config";
 
 export const Viewaccount = () => {
   var userID = sessionStorage.getItem("username");
@@ -19,7 +20,7 @@ export const Viewaccount = () => {
       setIsAdmin(false);
     }
     axios
-      .get(`http://localhost:3001/user/${userID}/accounts`)
+      .get(`${config.API_BASE_URL}/user/${userID}/accounts`)
       .then((response) => {
         const accountsData = response.data
           .slice(0, 5)
@@ -50,7 +51,7 @@ export const Viewaccount = () => {
       }
       return account;
     });
-    axios.patch(`http://localhost:3001/user/${userID}/deposit`, null, {
+    axios.patch(`${config.API_BASE_URL}/user/${userID}/deposit`, null, {
       params: {
         username: userID,
         accountNumber: accounts[index].accNo,
@@ -63,7 +64,7 @@ export const Viewaccount = () => {
   const addAccount = () => {
     if (accounts.length >= 5) return;
     axios
-      .post(`http://localhost:3001/user/${userID}}/newAccount`, null, {
+      .post(`${config.API_BASE_URL}/user/${userID}}/newAccount`, null, {
         params: {
           username: userID,
           accountName: `NetBank Saving ${accounts.length}`,
@@ -84,23 +85,23 @@ export const Viewaccount = () => {
   };
 
   return (
-  <Container>
-    <div>
-      <div className="flex flex-row">
-        <div className="flex w-[100%]">
-          {/* Conditional rendering based on admin status */}
-          {!isAdmin ? (
-            <ModalAccounts
-              accounts={accounts}
-              onAddAccount={addAccount}
-              onTopUp={topUpAccount}
-            />
-          ) : (
-            <ModalAdmin />
-          )}
+    <Container>
+      <div>
+        <div className="flex flex-row">
+          <div className="flex w-[100%]">
+            {/* Conditional rendering based on admin status */}
+            {!isAdmin ? (
+              <ModalAccounts
+                accounts={accounts}
+                onAddAccount={addAccount}
+                onTopUp={topUpAccount}
+              />
+            ) : (
+              <ModalAdmin />
+            )}
+          </div>
         </div>
       </div>
-    </div>
-  </Container>
-);
+    </Container>
+  );
 };
