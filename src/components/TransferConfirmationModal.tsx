@@ -26,7 +26,7 @@ function TransferConfirmationModal({
   onConfirm,
 }: TransferConfirmationModalProps) {
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} data-testid="confirmation-modal">
       <Modal.Header closeButton>
         <Modal.Title>Confirm transfer details</Modal.Title>
       </Modal.Header>

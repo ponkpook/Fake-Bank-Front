@@ -311,12 +311,19 @@ export const TransactionHistory = () => {
         </div>
 
         {/* 悬浮圆形按钮 */}
-        <button
-          className="fixed mt-16 top-10 right-5 bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
-          onClick={downloadPDF}
-        >
-          Download PDF
-        </button>
+        <div className=" fixed mt-16 top-10 right-5 justify-center">
+          <img
+            src="assets/download.png" // Use the dynamic image source prop
+            alt="download"
+            className=" flex w-[100px] h-[100px] ml-8"
+          />
+          <button
+            className=" bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
+            onClick={downloadPDF}
+          >
+            Download PDF
+          </button>
+        </div>
       </div>
     </Container>
   );
