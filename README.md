@@ -128,11 +128,6 @@ yarn add jspdf
 
 ## Overcoming Challenges
 
-1. **Iterative User Testing**:
-   - Conducted multiple rounds of testing with elderly users to gather feedback and improve usability.
-2. **Collaboration with Client**:
-   - Worked closely with Fake-Bank to ensure their security standards were met while keeping the platform user-friendly.
-
 ---
 
 # 05. Lessons Learned
