@@ -51,29 +51,119 @@ yarn add react-datepicker
 yarn add jspdf
 ```
 
-Git Flow 是一种常见的工作流方法，通常用于有多个发布周期和功能开发的项目。它使用了明确的分支命名和结构。
+三. 主体
 
-    •	main 或 master：这是主分支，通常代表生产环境的代码。
-    •	develop：这是用于开发的主干分支，所有新的功能会合并到这里。
-    •	feature/{feature-name}：每个新功能的开发都应该从 develop 分支拉出一个特性分支。
-    •	示例：feature/user-login、feature/payment-integration
-    •	release/{version}：当准备发布时，从 develop 分支创建一个发布分支。
-    •	示例：release/1.0.0
-    •	hotfix/{description}：用于紧急修复的分支，从 main 分支拉出并在修复后合并回 main 和 develop。
-    •	示例：hotfix/security-patch
-    •	bugfix/{issue}：用于从 develop 分支创建的修复特定问题的分支。
-    •	示例：bugfix/issue-123
+# 01. Introduction
 
-git comment
+## Introduction to the Project
 
-    •	常见类型：
-    •	feat：新功能（feature）
-    •	fix：修复 Bug
-    •	docs：仅文档更改
-    •	style：代码格式（不影响代码逻辑的变动）
-    •	refactor：重构（即不是新增功能，也不是修复 Bug 的代码变动）
-    •	test：增加或修改测试代码
-    •	chore：对构建过程或辅助工具的更改（不影响源代码）
-    - <type>: <short summary>
-    - [optional body]
-    - [optional footer(s)]
+1. **Team Overview**:
+   - We are a team of 5 members dedicated to creating a user-friendly platform for elderly users.
+   - Our goal was to empower seniors by teaching them how to confidently navigate online banking transactions.
+2. **Target Audience**:
+   - The elderly, specifically those unfamiliar with modern digital payment systems.
+   - Our focus was on making the process intuitive and secure for first-time users.
+
+---
+
+# 02. Project and Client Overview
+
+## Client Overview: Fake-Bank Company
+
+1. **Client Description**:
+   - Fake-Bank is a trusted financial institution focused on providing services for elderly care.
+   - The bank aims to enhance the financial literacy of elderly users, especially in online transactions.
+2. **Project Scope**:
+   - Our project was to develop a comprehensive platform that simplifies online banking for seniors.
+   - We covered several key functionalities including:
+     - Account registration and login.
+     - Payment methods: Credit card, BPAY, and recurrence payments.
+
+## Key Objectives
+
+1. **Empowering Users**:
+   - Build a platform that teaches seniors to confidently use online transaction services.
+   - Simplify complex banking processes.
+2. **Core Features**:
+   - Registration and Login System.
+   - Payment Methods and Payer Management.
+   - BPAY and Recurrence Payment Options.
+
+---
+
+# 03. Technologies Used
+
+## Front-End Technologies
+
+1. **React.js**:
+   - React.js was used to develop the front-end, ensuring a dynamic and responsive user interface.
+2. **Deployment**:
+   - The front-end was deployed using **Vercel** for seamless, fast deployment.
+3. **Testing**:
+   - **Jest** was used for testing the front-end functionalities to ensure robustness and reliability.
+
+## Back-End Technologies
+
+1. **Nest.js**:
+   - Nest.js was used to build the back-end, providing a scalable and efficient structure for the server-side logic.
+2. **Database**:
+   - We used **MongoDB Atlas** for database management, ensuring security and scalability of the data.
+3. **Deployment**:
+   - The back-end was deployed using **Render**.
+4. **Testing**:
+   - For back-end testing, we used **Nest.js’s built-in testing framework** to validate APIs and functionality.
+
+---
+
+# 04. Challenges Faced
+
+## Key Challenges
+
+1. **User Interface Simplicity**:
+   - Designing an interface that is both simple and intuitive for elderly users, without overwhelming them with too many features.
+2. **Security vs. Usability**:
+   - Balancing security features with ease of use for seniors who may not be familiar with digital security protocols.
+3. **Technical Integration**:
+   - Integrating multiple payment methods like BPAY and recurrence payments posed significant technical challenges.
+
+## Overcoming Challenges
+
+1. **Iterative User Testing**:
+   - Conducted multiple rounds of testing with elderly users to gather feedback and improve usability.
+2. **Collaboration with Client**:
+   - Worked closely with Fake-Bank to ensure their security standards were met while keeping the platform user-friendly.
+
+---
+
+# 05. Lessons Learned
+
+## Key Takeaways
+
+1. **User-Centered Design**:
+   - Importance of continuously testing and refining the user interface based on real user feedback, especially for the elderly demographic.
+2. **Collaboration**:
+   - Close collaboration with the client helped align technical requirements with user needs.
+3. **Technical Skills**:
+   - Enhanced our skills in React.js, Nest.js, and MongoDB, particularly in deploying secure, scalable applications.
+4. **Balancing Security and Usability**:
+   - Learned the significance of finding the balance between providing robust security features and maintaining usability for non-tech-savvy users.
+
+---
+
+# 06. Achievements & What We’re Proud Of
+
+## Key Achievements
+
+1. **Empowering Elderly Users**:
+   - Successfully developed a platform that enables seniors to confidently use online banking services.
+2. **Technical Excellence**:
+   - Efficiently integrated complex functionalities like BPAY and recurring payments.
+3. **Client Satisfaction**:
+   - Received positive feedback from Fake-Bank for delivering a secure, scalable, and user-friendly platform.
+
+## Proud Moments
+
+1. **Teamwork**:
+   - Excellent collaboration and problem-solving within the team, which led to timely project delivery.
+2. **Impact**:
+   - The potential positive impact on elderly users’ lives by making online transactions accessible and easy to use.
