@@ -46,6 +46,24 @@ test("renders Transfer page on /transfer route", () => {
   expect(screen.getByText("Select your account:")).toBeInTheDocument();
 });
 
+test("renders Accounts page on /accounts route", () => {
+  render(
+    <MemoryRouter initialEntries={["/accounts"]}>
+      <App />
+    </MemoryRouter>
+  );
+  expect(screen.getByText("Add One More Saving Account")).toBeInTheDocument();
+});
+
+test("renders User Management page on /user-management route", () => {
+  render(
+    <MemoryRouter initialEntries={["/user-management"]}>
+      <App />
+    </MemoryRouter>
+  );
+  expect(screen.getByText("Manage the user accounts")).toBeInTheDocument();
+});
+
 test("renders Transaction page on /transaction route", () => {
   render(
     <MemoryRouter initialEntries={["/transaction"]}>
