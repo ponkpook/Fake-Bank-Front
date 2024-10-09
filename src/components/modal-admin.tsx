@@ -103,7 +103,9 @@ export const ModalAdmin = () => {
         key={totalPages}
         onClick={() => setCurrentPage(totalPages)}
         className={`${buttonClass} ${
-          currentPage === totalPages ? "bg-teal-green text-white" : "bg-gray-200"
+          currentPage === totalPages
+            ? "bg-teal-green text-white"
+            : "bg-gray-200"
         }`}
       >
         {totalPages}
@@ -150,7 +152,8 @@ export const ModalAdmin = () => {
 
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-700 font-prosto">
-          Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of {users.length} entries
+          Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
+          {users.length} entries
         </span>
         <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
       </div>
