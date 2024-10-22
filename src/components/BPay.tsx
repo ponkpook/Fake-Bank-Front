@@ -5,6 +5,7 @@ import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { backEndUserAccount } from "../type";
+import config from "../config";
 
 interface BPayProps {
   accounts: IAccount[];
@@ -56,7 +57,10 @@ export const BPay: React.FC<BPayProps> = () => {
   // Simulate the transfer process and show result modal
   const handleTransfer = () => {
     console.log("accountNumber: ", selectedAccountNumber);
-    axios.post(`http://localhost:3001/user/${username}/BPAY`,null,{
+    while (username === null) {
+      username = sessionStorage.getItem("username");
+    }
+    axios.post(`${config.API_BASE_URL}/user/${username}/BPAY`,null,{
       params: {
         username: username,
         accountNumber: selectedAccountNumber,
@@ -98,7 +102,7 @@ export const BPay: React.FC<BPayProps> = () => {
         while (username === null) {
           username = sessionStorage.getItem("username");
         }
-        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${username}/accounts`);
+        const response = await axios.get<backEndUserAccount[]>(`${config.API_BASE_URL}/user/${username}/accounts`);
         for(var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
             name: response.data[i].accountName,

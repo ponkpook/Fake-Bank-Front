@@ -6,15 +6,19 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backEndUserAccount, backEndPayee } from "../type";
+import config from "../config";
 
 interface RecurringPaymentsProps {
   accounts: IAccount[];
 }
 
+var username = sessionStorage.getItem("username");
+
 export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
-  accounts,
 }) => {
-  const existingPayees = ["Payee1", "Payee2"];
+  const [existingPayees, setExistingPayees] = useState<backEndPayee[]>([]);
   const frequencyOption = ["Every week", "Every fortnight", "Every 6 months"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
@@ -55,6 +59,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
 
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
+    setIsFrequencyToDropdownOpen(false);
   };
 
   const handleConfirm = () => {
@@ -74,6 +79,19 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
 
   // Handle the actual transfer process
   const handleTransfer = () => {
+     while (username == null) {
+      username = sessionStorage.getItem("username");
+    }
+    console.log("fromAccount: ", selectedAccountNumber);
+    console.log("toAccount: ", selectedTransferToNumber);
+    axios.post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
+        fromAccount: selectedAccountNumber,
+        toAccount: selectedTransferToNumber,
+        amount: Number(transferAmount),
+      })
+      .then((response) => {
+        console.log(response);
+      });
     const isSuccess = 1; // Randomly simulate success or failure
     setIsConfirmationVisible(false); // Close the confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
@@ -96,6 +114,67 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
     setIsResultVisible(false);
     navigate("/accounts"); // Redirect when user manually closes the modal
   };
+
+  //back-end ---------------------------------------------------------------
+  const [accounts] = useState<IAccount[]>([]);
+  const [selectedTransferToNumber, setSelectedTransferToNumber] = useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] =
+    useState<string>("");
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        const response = await axios.get<backEndUserAccount[]>(`${config.API_BASE_URL}/user/${username}/accounts`);
+        for(var i = 0; i < Math.min(response.data.length, 5); i++) {
+          accounts.push({
+            name: response.data[i].accountName,
+            bsb: response.data[i].BSB,
+            accNo: response.data[i].accountNumber,
+            image: "null",
+            balance: response.data[i].balance.toString(),
+          });
+        }
+        
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+  const fetchPayees = async () => {
+    while (username == null) {
+      username = sessionStorage.getItem("username");
+    }
+    const response = await axios.get(
+      `${config.API_BASE_URL}/user/${username}/getPayees`,
+      { params: { username: username } }
+    );
+    var payees = [];
+    for (var i = 0; i < response.data.length; i++) {
+      payees.push(response.data[i]);
+    }
+    setExistingPayees(payees);
+    console.log("Payees fetched successfully");
+  };
+
+  // Fetch existing payees from the backend
+  useEffect(() => {
+    fetchPayees();
+  }, []);
+
+  const handleAccountChangeNumber = (account: string) => {
+    setSelectedAccountNumber(account);
+    setSelectedTransferTo(""); // Reset transfer to when a new account is selected
+  };
+
+  const handleTransferToChangeNumber = (payee: string) => {
+    setSelectedTransferToNumber(payee);
+  };
+
+
 
   return (
     <div className="flex justify-center p-space-8 bg-light-green shadow-lg mb-10 min-h-[80vh]">
@@ -125,7 +204,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                       onClick={() => handleAccountChange(account.name)}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
-                      {account.accNo})
+                      {account.accNo}, Balance: {account.balance})
                     </button>
                   ))}
                 </div>
@@ -153,11 +232,15 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {existingPayees.map((payee) => (
                     <button
-                      key={payee}
-                      className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleTransferToChange(payee)}
-                    >
-                      {payee}
+                     key={payee.accountNumber}
+                        className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
+                        onClick={() => {
+                          handleTransferToChange(payee.payeeName);
+                          handleTransferToChangeNumber(payee.accountNumber);
+                          console.log("payeeNumber: ", payee.accountNumber);
+                        }}
+                      >
+                        {payee.payeeName}
                     </button>
                   ))}
                 </div>

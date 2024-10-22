@@ -25,7 +25,7 @@ export const TransferBetweenAccounts: React.FC<
           userID = sessionStorage.getItem("username");
         }
         const response = await axios.get<backEndUserAccount[]>(
-          `${config.API_BASE_URL}/api/data/user/${userID}/accounts`
+          `${config.API_BASE_URL}/user/${userID}/accounts`
         );
         for (var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
