@@ -92,24 +92,25 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = (
     }
   };
 
+  const [transferFailMessage, setTransferFailMessage] = useState<string>("");
   // Define handleTransfer to process the transfer
-  const handleTransfer = () => {
+  const handleTransfer = async () => {
+    var isSuccess; // success popup =1, failure popup = 0
     // Simulate transfer success or failure
     while (username == null) {
       username = sessionStorage.getItem("username");
     }
-    console.log("fromAccount: ", selectedAccountNumber);
-    console.log("toAccount: ", selectedTransferToNumber);
-    axios
-      .post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
+    const response = await axios.post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
         fromAccount: selectedAccountNumber,
         toAccount: selectedTransferToNumber,
         amount: Number(transferAmount),
-      })
-      .then((response) => {
-        console.log(response);
-      });
-    const isSuccess = 1; // success popup =1, failure popup = 0
+    })
+    if (response.data.success) {
+      isSuccess = 1;
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsPopupVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -367,6 +368,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = (
       <TransferResultModal
         show={isResultVisible}
         status={transferStatus}
+        message={transferFailMessage}
         handleClose={handleClose}
       />
     </div>

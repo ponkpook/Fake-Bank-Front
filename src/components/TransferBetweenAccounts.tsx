@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import config from "../config";
+import { set } from "date-fns";
 
 var userID = sessionStorage.getItem("username");
 
@@ -91,24 +92,21 @@ export const TransferBetweenAccounts: React.FC<
       alert("Please fill in all fields.");
     }
   };
+  const [trasferFailMessage, setTransferFailMessage] = useState<string>("");
 
-  const handleTransfer = () => {
-    axios
-      .post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
+  const handleTransfer = async () => {
+    var isSuccess;
+    const response = await axios.post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
         fromAccount: selectedAccountNumber,
         toAccount: selectedTransferToNumber,
         amount: Number(transferAmount),
-      })
-      .then((response) => {
-        console.log(response);
-      });
-
-    console.log("Transfer successful!");
-    console.log("From: ", selectedAccount);
-    console.log("To: ", selectedTransferTo);
-    console.log("Amount: ", transferAmount);
-    // Simulate transfer logic, 1 = success, 0 = failure
-    const isSuccess = 1;
+    })
+    if (response.data.success) {
+      isSuccess = 1;
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsPopupVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -249,6 +247,7 @@ export const TransferBetweenAccounts: React.FC<
         <TransferResultModal
           show={isResultVisible}
           status={transferStatus}
+          message={trasferFailMessage}
           handleClose={handleClose}
         />
       </div>

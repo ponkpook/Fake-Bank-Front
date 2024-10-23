@@ -76,23 +76,24 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
       alert("Please fill in all fields.");
     }
   };
-
+  const [transferFailMessage, setTransferFailMessage] = useState<string>("");
   // Handle the actual transfer process
-  const handleTransfer = () => {
-     while (username == null) {
+  const handleTransfer = async() => {
+    while (username == null) {
       username = sessionStorage.getItem("username");
     }
-    console.log("fromAccount: ", selectedAccountNumber);
-    console.log("toAccount: ", selectedTransferToNumber);
-    axios.post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
+    var isSuccess;
+    const response = await axios.post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
         fromAccount: selectedAccountNumber,
         toAccount: selectedTransferToNumber,
         amount: Number(transferAmount),
-      })
-      .then((response) => {
-        console.log(response);
-      });
-    const isSuccess = 1; // Randomly simulate success or failure
+    })
+    if (response.data.success) {
+      isSuccess = 1; // Randomly simulate success or failure
+    }else{
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsConfirmationVisible(false); // Close the confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show the result modal
@@ -407,6 +408,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
       <TransferResultModal
         show={isResultVisible}
         status={transferStatus}
+        message={transferFailMessage}
         handleClose={handleClose}
       />
     </div>

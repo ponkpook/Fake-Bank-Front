@@ -53,14 +53,14 @@ export const BPay: React.FC<BPayProps> = () => {
       alert("Please fill in all fields.");
     }
   };
-
+  const [transferFailMessage, setTransferFailMessage] = useState<string>("");
   // Simulate the transfer process and show result modal
-  const handleTransfer = () => {
-    console.log("accountNumber: ", selectedAccountNumber);
+  const handleTransfer = async () => {
+    var isSuccess;
     while (username === null) {
       username = sessionStorage.getItem("username");
     }
-    axios.post(`${config.API_BASE_URL}/user/${username}/BPAY`,null,{
+    const response = await axios.post(`${config.API_BASE_URL}/user/${username}/BPAY`, null, {
       params: {
         username: username,
         accountNumber: selectedAccountNumber,
@@ -70,7 +70,12 @@ export const BPay: React.FC<BPayProps> = () => {
         referenceNumber: referenceNumber,
       }
     });
-    const isSuccess = 1; // Randomly simulate success or failure
+    if (response.data.success){
+      isSuccess = 1; // Randomly simulate success or failure
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsConfirmationVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -241,6 +246,7 @@ export const BPay: React.FC<BPayProps> = () => {
       <TransferResultModal
         show={isResultVisible}
         status={transferStatus}
+        message={transferFailMessage}
         handleClose={handleClose}
       />
     </div>
