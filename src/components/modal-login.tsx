@@ -21,39 +21,24 @@ export const ModalLogin = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     // 使用验证逻辑
     const validate = validateCredentials(username, password);
     if (validate.username !== "") {
       setUsernameError(validate.username);
       return;
-    } else if (validate.password !== "") {
-      setPasswordError(validate.password);
-      return;
-    } else {
     }
-
-    axios
-      .post(`${config.API_BASE_URL}/auth/login`, {
+    const response = await axios.post(`${config.API_BASE_URL}/auth/login`, {
         username,
         password,
       })
-      .then((response) => {
-        if (response.data.success) {
-          console.log("Login successful:", response.data);
-          // store userID
-          sessionStorage.setItem("username", username);
-          navigate("/accounts");
-        } else {
-          setError("Invalid username or password");
-          console.log("Login failed:", response.data);
-        }
-      })
-      .catch((error) => {
-        console.log("Error logging in:", error);
-        setError("An error occurred while logging in. Please try again.");
-      });
+    if (response.data.success) {
+      sessionStorage.setItem("username", username);
+      navigate("/accounts");
+    } else {
+      setPasswordError(response.data.message);
+    }
   };
 
   return (
