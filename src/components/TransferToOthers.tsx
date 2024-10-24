@@ -101,8 +101,8 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = (
       username = sessionStorage.getItem("username");
     }
     const response = await axios.post(`${config.API_BASE_URL}/user/${username}/transferToOthers`, {
-        fromAccount: selectedAccountNumber,
-        toAccount: selectedTransferToNumber,
+        fromAccount: selectedAccount,
+        toAccount: selectedTransferTo,
         amount: Number(transferAmount),
     })
     if (response.data.success) {
@@ -286,7 +286,7 @@ export const TransferToOthers: React.FC<TransferToOthersProps> = (
               <button
                 className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
                 onClick={() => setIsNewPayee(true)} // Show the popup
-                disabled={!selectedAccount}
+                //disabled={!selectedAccount}
               >
                 {isNewPayee ? "Pay existing payee?" : "Pay someone new?"}
               </button>

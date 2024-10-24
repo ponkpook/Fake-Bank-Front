@@ -34,3 +34,20 @@ export interface backEndPayee {
   accountNumber: string;
   payeeBSB: string;
 }
+
+export interface transactionHistory {
+  id: number;
+  from: string;
+  to: string;
+  amount: number;
+  date: string;
+}
+
+export interface backEndTransactionHistory {
+  username: string;
+  fromAccNumber: string;
+  toAccNumber: string;
+  amount: number;
+  date: Date;
+  time: String;
+}

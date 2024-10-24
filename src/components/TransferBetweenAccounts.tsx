@@ -97,8 +97,8 @@ export const TransferBetweenAccounts: React.FC<
   const handleTransfer = async () => {
     var isSuccess;
     const response = await axios.post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
-        fromAccount: selectedAccountNumber,
-        toAccount: selectedTransferToNumber,
+        fromAccount: selectedAccount,
+        toAccount: selectedTransferTo,
         amount: Number(transferAmount),
     })
     if (response.data.success) {

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { backEndUserAccount } from "../type";
 import config from "../config";
+import { set } from "date-fns";
 
 interface BPayProps {
   accounts: IAccount[];
@@ -57,13 +58,14 @@ export const BPay: React.FC<BPayProps> = () => {
   // Simulate the transfer process and show result modal
   const handleTransfer = async () => {
     var isSuccess;
+    console.log("fromAccount: ", selectedAccount, "biller: ", billerName, "amount: ", transferAmount);
     while (username === null) {
       username = sessionStorage.getItem("username");
     }
     const response = await axios.post(`${config.API_BASE_URL}/user/${username}/BPAY`, null, {
       params: {
         username: username,
-        accountNumber: selectedAccountNumber,
+        accountName: selectedAccount,
         amount: Number(transferAmount),
         billerCode: billerCode,
         companyName: billerName,
