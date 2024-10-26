@@ -7,16 +7,35 @@ import config from "../config";
 
 const fetchUserData = async (): Promise<UserDisplay[]> => {
   const response = await axios.get<User[]>(`${config.API_BASE_URL}/user`);
-  return response.data
-    .filter((user) => user.isAdmin === false)
-    .map((user, index) => ({
-      id: index + 1,
-      username: user.username,
-      password: user.password,
-      date: String(user.date),
-    }));
+  const users = response.data.filter((user) => user.isAdmin === false);
+
+  const usersWithRemainingDays = await Promise.all(
+    users.map(async (user, index) => {
+      const remainingDays = await fetchRemainingDays(user.username);
+      return {
+        id: index + 1,
+        username: user.username,
+        password: user.password,
+        date: remainingDays,
+      };
+    })
+  );
+  return usersWithRemainingDays;
 };
 
+const fetchRemainingDays = async (username:string): Promise<string> => {
+  const remainingDaysData = await axios.get<number>(`${config.API_BASE_URL}/user/${username}/getExpireStatus`,
+    { params: { username } }
+  );
+  var remainingDays: string;
+  if (remainingDaysData.data > 0) {
+    remainingDays = `${remainingDaysData.data} days left`;
+  } else {
+    remainingDays = "expired";
+  }
+  return remainingDays;
+}
+  
 export const ModalAdmin = () => {
   const [usersData, setUsersData] = useState<UserDisplay[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -37,7 +56,7 @@ export const ModalAdmin = () => {
     try {
       const prevUsers = [...usersData];
       // Make API request to delete the user from the backend
-      await axios.delete(`${config.API_BASE_URL}/users/${username}`);
+      await axios.delete(`${config.API_BASE_URL}/user/${username}`);
       // Filter out the deleted user from the local state
       setUsersData((prevUsers) =>
         prevUsers.filter((user) => user.username !== username)
