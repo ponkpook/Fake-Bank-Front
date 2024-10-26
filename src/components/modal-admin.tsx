@@ -149,7 +149,9 @@ export const ModalAdmin = () => {
               <th className="w-1/5 py-3 text-center">ID</th>
               <th className="w-1/5 py-3 text-center">Username</th>
               <th className="w-1/5 py-3 text-center">Password</th>
-              <th className="w-1/5 py-3 text-center">Account Creation Date</th>
+              <th className="w-1/5 py-3 text-center">
+                Remaining Date on account
+              </th>
               <th className="w-1/5 py-3 text-center">Delete</th>
             </tr>
           </thead>
@@ -160,7 +162,7 @@ export const ModalAdmin = () => {
                 <td className="w-1/5 py-3 text-center">{user.username}</td>
                 <td className="w-1/5 py-3 text-center">{user.password}</td>
                 <td className="w-1/5 py-3 text-center">{user.date}</td>
-                <td className="flex py-3 justify-center">
+                <td className="w-1/5 py-3 text-center">
                   <button
                     className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m"
                     onClick={() => deleteUser(user.username)}
