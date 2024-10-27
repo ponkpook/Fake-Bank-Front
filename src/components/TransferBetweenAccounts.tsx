@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
-import { IAccount } from "../type";
+import React, { useState } from "react";
+import { backEndUserAccount, IAccount } from "../type";
 import TransferConfirmationModal from "./TransferConfirmationModal";
 import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useEffect } from "react";
+import config from "../config";
+import { set } from "date-fns";
+
+var userID = sessionStorage.getItem("username");
 
 interface TransferBetweenAccountsProps {
   accounts: IAccount[];
@@ -10,9 +16,43 @@ interface TransferBetweenAccountsProps {
 
 export const TransferBetweenAccounts: React.FC<
   TransferBetweenAccountsProps
-> = ({ accounts }) => {
+> = () => {
+  const [accounts] = useState<IAccount[]>([]);
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (userID === null) {
+          userID = sessionStorage.getItem("username");
+        }
+        const response = await axios.get<backEndUserAccount[]>(
+          `${config.API_BASE_URL}/user/${userID}/accounts`
+        );
+        for (var i = 0; i < Math.min(response.data.length, 5); i++) {
+          accounts.push({
+            name: response.data[i].accountName,
+            bsb: response.data[i].BSB,
+            accNo: response.data[i].accountNumber,
+            image: "null",
+            balance: response.data[i].balance.toString(),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+
+    fetchAccounts();
+  }, []);
+
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
+
+  const [selectedAccountNumber, setSelectedAccountNumber] =
+    useState<string>("");
+  const [selectedTransferToNumber, setSelectedTransferToNumber] =
+    useState<string>("");
+
   const [transferAmount, setTransferAmount] = useState<string>("");
   const [isPopupVisible, setIsPopupVisible] = useState<boolean>(false);
 
@@ -52,10 +92,21 @@ export const TransferBetweenAccounts: React.FC<
       alert("Please fill in all fields.");
     }
   };
+  const [trasferFailMessage, setTransferFailMessage] = useState<string>("");
 
-  const handleTransfer = () => {
-    // Simulate transfer logic, 1 = success, 0 = failure
-    const isSuccess = 1;
+  const handleTransfer = async () => {
+    var isSuccess;
+    const response = await axios.post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
+        fromAccount: selectedAccount,
+        toAccount: selectedTransferTo,
+        amount: Number(transferAmount),
+    })
+    if (response.data.success) {
+      isSuccess = 1;
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsPopupVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -103,10 +154,13 @@ export const TransferBetweenAccounts: React.FC<
                     <button
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account.name)}
+                      onClick={() => {
+                        handleAccountChange(account.name);
+                        setSelectedAccountNumber(account.accNo);
+                      }}
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
-                      {account.accNo})
+                      {account.accNo}, Balance: {account.balance})
                     </button>
                   ))}
                 </div>
@@ -141,10 +195,13 @@ export const TransferBetweenAccounts: React.FC<
                       <button
                         key={account.accNo}
                         className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                        onClick={() => handleTransferToChange(account.name)}
+                        onClick={() => {
+                          handleTransferToChange(account.name);
+                          setSelectedTransferToNumber(account.accNo);
+                        }}
                       >
                         {account.name} (BSB: {account.bsb}, Account:{" "}
-                        {account.accNo})
+                        {account.accNo}, Balance: {account.balance})
                       </button>
                     ))}
                   </div>
@@ -178,7 +235,9 @@ export const TransferBetweenAccounts: React.FC<
         {isPopupVisible && (
           <TransferConfirmationModal
             show={isPopupVisible}
-            handleClose={() => setIsPopupVisible(false)}
+            handleClose={() => {
+              setIsPopupVisible(false);
+            }}
             amount={transferAmount}
             recipient={selectedTransferTo}
             fromAccount={selectedAccount} // Pass the selected "from" account
@@ -190,6 +249,7 @@ export const TransferBetweenAccounts: React.FC<
         <TransferResultModal
           show={isResultVisible}
           status={transferStatus}
+          message={trasferFailMessage}
           handleClose={handleClose}
         />
       </div>

@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 interface TransferResultModalProps {
   show: boolean; // 控制模态框是否显示
   status: "success" | "fail"; // 表示转账的结果：成功或失败
+  message: string; 
   handleClose: () => void; // 用于关闭模态框的函数
 }
 
@@ -13,6 +14,7 @@ interface TransferResultModalProps {
 const TransferResultModal: React.FC<TransferResultModalProps> = ({
   show,
   status,
+  message,
   handleClose,
 }) => {
   return (
@@ -31,7 +33,7 @@ const TransferResultModal: React.FC<TransferResultModalProps> = ({
         {/* 根据转账结果显示不同的信息 */}
         {status === "success"
           ? "Your transfer has been completed successfully."
-          : "The transfer could not be completed due to insufficient funds or another issue."}
+          : message}
       </Modal.Body>
       <Modal.Footer>
         <Button

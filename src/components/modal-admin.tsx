@@ -1,38 +1,66 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { User, UserDisplay } from "../type";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
+import config from "../config";
 
-export const ModalAdmin = () => {
-  const [users, setUsers] = useState(
-    new Array(256).fill(null).map((_, index) => ({
-      id: index + 1,
-      username: `User ${index + 1}`,
-      password: `Password${index + 1}`,
-      date: "23/08/2024",
-    }))
+const fetchUserData = async (): Promise<UserDisplay[]> => {
+  const response = await axios.get<User[]>(`${config.API_BASE_URL}/user`);
+  const users = response.data.filter((user) => user.isAdmin === false);
+
+  const usersWithRemainingDays = await Promise.all(
+    users.map(async (user, index) => {
+      const remainingDays = await fetchRemainingDays(user.username);
+      return {
+        id: index + 1,
+        username: user.username,
+        password: user.password,
+        date: remainingDays,
+      };
+    })
   );
+  return usersWithRemainingDays;
+};
 
+const fetchRemainingDays = async (username:string): Promise<string> => {
+  const remainingDaysData = await axios.get<number>(`${config.API_BASE_URL}/user/${username}/getExpireStatus`,
+    { params: { username } }
+  );
+  var remainingDays: string;
+  if (remainingDaysData.data > 0) {
+    remainingDays = `${remainingDaysData.data} days left`;
+  } else {
+    remainingDays = "expired";
+  }
+  return remainingDays;
+}
+  
+export const ModalAdmin = () => {
+  const [usersData, setUsersData] = useState<UserDisplay[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
 
+  useEffect(() => {
+    fetchUserData().then((data) => setUsersData(data));
+  }, []);
+
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+  const currentUsers = usersData.slice(indexOfFirstUser, indexOfLastUser);
 
   // total page count
-  const totalPages = Math.ceil(users.length / usersPerPage);
+  const totalPages = Math.ceil(usersData.length / usersPerPage);
 
-  const deleteUser = async (id: number) => {
+  const deleteUser = async (username: string) => {
     try {
+      const prevUsers = [...usersData];
       // Make API request to delete the user from the backend
-      await fetch(`/api/users/${id}`, {
-        method: "DELETE",
-      });
-
+      await axios.delete(`${config.API_BASE_URL}/user/${username}`);
       // Filter out the deleted user from the local state
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
+      setUsersData((prevUsers) =>
+        prevUsers.filter((user) => user.username !== username)
+      );
     } catch (error) {
       console.error("Error deleting user:", error);
     }
@@ -42,7 +70,22 @@ export const ModalAdmin = () => {
     const pageNumbers = [];
     const buttonClass = "px-3 py-1 rounded";
 
-    // First Page Button
+    // If there's only one page, render just one button
+    if (totalPages === 1) {
+      return (
+        <button
+          key={1}
+          onClick={() => setCurrentPage(1)}
+          className={`px-3 py-1 rounded ${
+            currentPage === 1 ? "bg-blue-500 text-white" : "bg-gray-200"
+          }`}
+        >
+          1
+        </button>
+      );
+    }
+
+    // Otherwise, render the full pagination logic
     pageNumbers.push(
       <button
         key={1}
@@ -125,7 +168,9 @@ export const ModalAdmin = () => {
               <th className="w-1/5 py-3 text-center">ID</th>
               <th className="w-1/5 py-3 text-center">Username</th>
               <th className="w-1/5 py-3 text-center">Password</th>
-              <th className="w-1/5 py-3 text-center">Account Creation Date</th>
+              <th className="w-1/5 py-3 text-center">
+                Remaining Date on account
+              </th>
               <th className="w-1/5 py-3 text-center">Delete</th>
             </tr>
           </thead>
@@ -136,10 +181,10 @@ export const ModalAdmin = () => {
                 <td className="w-1/5 py-3 text-center">{user.username}</td>
                 <td className="w-1/5 py-3 text-center">{user.password}</td>
                 <td className="w-1/5 py-3 text-center">{user.date}</td>
-                <td className="flex py-3 justify-center">
+                <td className="w-1/5 py-3 text-center">
                   <button
-                    className=" border-2 border-solid border-red-200 shadow-md text-gray-700 px-3 py-2 rounded-m duration-200 bg-native-red/50 hover:bg-native-red/90"
-                    onClick={() => deleteUser(user.id)}
+                    className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m"
+                    onClick={() => deleteUser(user.username)}
                   >
                     Delete
                   </button>
@@ -149,7 +194,6 @@ export const ModalAdmin = () => {
           </tbody>
         </table>
       </div>
-
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-700 font-prosto">
           Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
@@ -160,3 +204,5 @@ export const ModalAdmin = () => {
     </div>
   );
 };
+
+export default ModalAdmin;

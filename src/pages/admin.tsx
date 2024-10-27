@@ -7,15 +7,15 @@ import axios from "axios";
 
 export const userID = "admin1"; // string
 export const Admin = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
-  return (
-    <Container>
-      <div>
-        <div className="flex flex-row">
-          <div className="flex w-[100%]">
-            {/* admin */}
-            {isAdmin && <ModalAdmin />}
-          </div>
+    const [isAdmin, setIsAdmin] = useState(true);
+    return (
+        <Container>
+        <div>
+            <div className="flex flex-row">
+            <div className="flex w-[100%]">
+                {/* admin */}
+                {isAdmin && <ModalAdmin />}
+            </div>
         </div>
       </div>
     </Container>

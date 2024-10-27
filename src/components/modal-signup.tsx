@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import GreetingSection from "./GreetingSection";
 import { validateCredentials } from "./ValidateInfo";
+import config from "../config";
 
 export const ModalSignup = () => {
   const [username, setUsername] = useState("");
@@ -20,7 +21,7 @@ export const ModalSignup = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     // 使用验证逻辑
@@ -29,27 +30,22 @@ export const ModalSignup = () => {
     if (validate.username !== "") {
       setUsernameError(validate.username);
       return;
-    } else if (validate.password !== "") {
+    } 
+    if (validate.password !== "") {
       setPasswordError(validate.password);
       return;
-    } else {
     }
-
-    axios
-      .post("http://localhost:3001/auth/register", { username, password })
-      .then((response) => {
-        if (response.data.success) {
-          console.log("Register success:", response.data);
-          navigate("/accounts");
-        } else {
-          console.log("Register failed:", response.data);
-          setError("Invalid username or password");
-        }
+    const response = await axios.post(`${config.API_BASE_URL}/auth/register`, {
+        username,
+        password,
       })
-      .catch((error) => {
-        console.error("Error logging in:", error);
-        setError("An error occurred while logging in. Please try again.");
-      });
+    
+    if (response.data.success) {
+      sessionStorage.setItem("username", username);
+      navigate("/accounts");
+    } else {
+      setPasswordError(response.data.message);
+    }
   };
 
   return (

@@ -1,19 +1,56 @@
 import React, { useEffect, useState } from "react";
 import { Container } from "../components/container";
 import GreetingSection from "../components/GreetingSection";
-import { IAccount } from "../type";
+import { IAccount,backEndUserAccount } from "../type";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
+import axios from "axios";
+import config from "../config";
 
 interface TransactionSelectProps {
   accounts: IAccount[];
 }
 
+var username = sessionStorage.getItem("username");
+
 export const TransactionSelect: React.FC<TransactionSelectProps> = ({
-  accounts,
 }) => {
+
+
   // State for storing accounts and other selections
-  const [accountsState, setAccounts] = useState<IAccount[]>([]);
+  const [accounts, setAccounts] = useState<IAccount[]>([]);
   const [selectedAccount, setSelectedAccount] = useState<string>(""); // State for selected account
+
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        if (username !== null) {
+          const response = await axios.get<backEndUserAccount[]>(
+            `${config.API_BASE_URL}/user/${username}/accounts`
+          );
+          const fetchedAccounts = response.data.slice(0, 5).map(account => ({
+            name: account.accountName,
+            bsb: account.BSB,
+            accNo: account.accountNumber,
+            image: "null",
+            balance: account.balance.toString(),
+          }));
+          setAccounts(fetchedAccounts);
+        }
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+
+      fetchAccounts();
+    }, [username]);
+
+
+
+
+
   const [isAccountDropdownOpen, setIsAccountDropdownOpen] =
     useState<boolean>(false);
   const navigate = useNavigate(); // Initialize useNavigate
@@ -52,6 +89,10 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = ({
   const handleShowClick = () => {
     navigate("/transaction-history", { state: { selectedAccount } }); // Pass selected account to transaction-history
   };
+
+
+
+
   return (
     <Container>
       <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg my-10 rounded-m min-h-[80vh] items-center justify-center ">
@@ -95,7 +136,7 @@ export const TransactionSelect: React.FC<TransactionSelectProps> = ({
                     >
                       All accounts
                     </button>
-                    {accountsState.map((account) => (
+                    {accounts.map((account) => (
                       <button
                         key={account.accNo}
                         className="w-full text-left px-4 py-2 hover:bg-gray-200 cursor-pointer"
