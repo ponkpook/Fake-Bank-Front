@@ -197,7 +197,7 @@ export const ModalAdmin = () => {
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-700 font-prosto">
           Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
-          {usersData.length} entries
+          {users.length} entries
         </span>
         <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
       </div>

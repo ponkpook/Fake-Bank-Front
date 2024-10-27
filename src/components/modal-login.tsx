@@ -66,6 +66,7 @@ export const ModalLogin = () => {
               </p>
               <input
                 type="text"
+                data-testid="username-input"
                 value={username}
                 onChange={handleUsernameChange}
                 className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${
@@ -85,6 +86,7 @@ export const ModalLogin = () => {
                   passwordError ? "border-red-500 border-2" : ""
                 }`}
                 type="password"
+                data-testid="password-input"
                 value={password}
                 onChange={handlePasswordChange}
               />

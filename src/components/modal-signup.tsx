@@ -73,6 +73,7 @@ export const ModalSignup = () => {
               </p>
               <input
                 type="text"
+                placeholder="Enter your name"
                 value={username}
                 onChange={handleUsernameChange}
                 className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${
@@ -92,6 +93,7 @@ export const ModalSignup = () => {
                   passwordError ? "border-red-500 border-2" : ""
                 }`}
                 type="password"
+                placeholder="Enter password"
                 value={password}
                 onChange={handlePasswordChange}
               />

@@ -140,6 +140,7 @@ export const TransferBetweenAccounts: React.FC<
             </div>
             <div className="w-full h-l bg-gray-200 flex items-center justify-between px-space-4 relative">
               <button
+                data-testid="select-account-from"
                 className={`w-full text-left ${
                   selectedAccount ? "text-black" : "text-grey-800"
                 }`}
@@ -177,6 +178,7 @@ export const TransferBetweenAccounts: React.FC<
               </div>
               <div className="w-full h-l bg-gray-200 rounded flex items-center justify-between px-space-4 relative">
                 <button
+                  data-testid="select-account-to"
                   className={`w-full text-left ${
                     selectedAccount ? "text-black" : "text-grey-800"
                   }`}
