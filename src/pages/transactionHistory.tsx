@@ -3,122 +3,152 @@ import { Container } from "../components/container";
 import { useLocation, useNavigate } from "react-router-dom";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-
-export const transactionData = [
-  {
-    id: 1,
-    From: "Everyday Account",
-    To: "Abc123",
-    Amount: 100,
-    Date: "12/12/1212",
-  },
-  {
-    id: 2,
-    From: "NetBank Saving",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 3,
-    From: "Saving2",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  //test
-  {
-    id: 1,
-    From: "Everyday Account",
-    To: "Abc123",
-    Amount: 100,
-    Date: "12/12/1212",
-  },
-  {
-    id: 2,
-    From: "NetBank Saving",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 3,
-    From: "Saving2",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 1,
-    From: "Everyday Account",
-    To: "Abc123",
-    Amount: 100,
-    Date: "12/12/1212",
-  },
-  {
-    id: 2,
-    From: "NetBank Saving",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 3,
-    From: "Saving2",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 1,
-    From: "Everyday Account",
-    To: "Abc123",
-    Amount: 100,
-    Date: "12/12/1212",
-  },
-  {
-    id: 2,
-    From: "NetBank Saving",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 3,
-    From: "Saving2",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-  {
-    id: 1,
-    From: "Everyday Account",
-    To: "Abc123",
-    Amount: 100,
-    Date: "12/12/1212",
-  },
-  {
-    id: 2,
-    From: "NetBank Saving",
-    To: "Xyz456",
-    Amount: 150,
-    Date: "15/12/1212",
-  },
-];
+import { backEndTransactionHistory, transactionHistory, IAccount } from "../type";
+import axios from "axios";
+import config from "../config";
+// export const transactionData = [
+//   {
+//     id: 1,
+//     From: "Everyday Account",
+//     To: "Abc123",
+//     Amount: 100,
+//     Date: "12/12/1212",
+//   },
+//   {
+//     id: 2,
+//     From: "NetBank Saving",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 3,
+//     From: "Saving2",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   //test
+//   {
+//     id: 1,
+//     From: "Everyday Account",
+//     To: "Abc123",
+//     Amount: 100,
+//     Date: "12/12/1212",
+//   },
+//   {
+//     id: 2,
+//     From: "NetBank Saving",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 3,
+//     From: "Saving2",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 1,
+//     From: "Everyday Account",
+//     To: "Abc123",
+//     Amount: 100,
+//     Date: "12/12/1212",
+//   },
+//   {
+//     id: 2,
+//     From: "NetBank Saving",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 3,
+//     From: "Saving2",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 1,
+//     From: "Everyday Account",
+//     To: "Abc123",
+//     Amount: 100,
+//     Date: "12/12/1212",
+//   },
+//   {
+//     id: 2,
+//     From: "NetBank Saving",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 3,
+//     From: "Saving2",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//   {
+//     id: 1,
+//     From: "Everyday Account",
+//     To: "Abc123",
+//     Amount: 100,
+//     Date: "12/12/1212",
+//   },
+//   {
+//     id: 2,
+//     From: "NetBank Saving",
+//     To: "Xyz456",
+//     Amount: 150,
+//     Date: "15/12/1212",
+//   },
+//];
+var username = sessionStorage.getItem("username");
 
 export const TransactionHistory = () => {
+  const [transactionData, setTransactionData] = useState<transactionHistory[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const usersPerPage = 8;
   const navigate = useNavigate();
   const location = useLocation(); // 获取传递的 state
 
   const selectedAccount = location.state?.selectedAccount || "All"; // 获取传递的账户或默认显示 "All"
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        const response = await axios.get(`${config.API_BASE_URL}/user/${username}/transactions`, {
+          params: {username}
+        });
+        const data = response.data.map((transaction: any, index: number) => ({
+          id: index + 1,
+          from: transaction.fromAccount,
+          to: transaction.toAccount,
+          amount: transaction.amount,
+          date: new Date(transaction.date).toLocaleDateString(),
+        }));
+        setTransactionData(data);
+        console.log('Transaction data:', data);
+      } catch (error) {
+        console.error('Error fetching transactions:', error);
+      }
+    };
+    fetchTransactions();
+  }, [username]);
+
+
   // 过滤交易数据
   const filteredTransactions =
     selectedAccount === "All"
       ? transactionData // 显示所有交易
       : transactionData.filter(
-          (transaction) => transaction.From === selectedAccount
+          (transaction) => transaction.from === selectedAccount
         ); // 过滤特定账户的交易
 
   const indexOfLastUser = currentPage * usersPerPage;
@@ -236,10 +266,10 @@ export const TransactionHistory = () => {
     const tableColumn = ["ID", "From", "To", "Amount", "Date"];
     const tableRows = filteredTransactions.map((transaction) => [
       transaction.id,
-      transaction.From,
-      transaction.To,
-      `$${transaction.Amount}`,
-      transaction.Date,
+      transaction.from,
+      transaction.to,
+      `$${transaction.amount}`,
+      transaction.date,
     ]);
 
     (doc as any).autoTable({
@@ -273,10 +303,10 @@ export const TransactionHistory = () => {
               {currentUsers.map((user, index) => (
                 <tr key={index} className=" border-b hover:shadow-lg">
                   <td className="w-1/5 py-3 text-center">{user.id}</td>
-                  <td className="w-1/5 py-3 text-center">{user.From}</td>
-                  <td className="w-1/5 py-3 text-center">{user.To}</td>
-                  <td className="w-1/5 py-3 text-center">${user.Amount}</td>
-                  <td className="w-1/5 py-3 text-center">{user.Date}</td>
+                  <td className="w-1/5 py-3 text-center">{user.from}</td>
+                  <td className="w-1/5 py-3 text-center">{user.to}</td>
+                  <td className="w-1/5 py-3 text-center">${user.amount}</td>
+                  <td className="w-1/5 py-3 text-center">{user.date}</td>
                 </tr>
               ))}
               {/* Placeholder for additional rows to maintain consistent height */}
@@ -311,12 +341,19 @@ export const TransactionHistory = () => {
         </div>
 
         {/* 悬浮圆形按钮 */}
-        <button
-          className="fixed mt-16 top-10 right-5 bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
-          onClick={downloadPDF}
-        >
-          Download PDF
-        </button>
+        <div className=" fixed mt-16 top-10 right-5 justify-center">
+          <img
+            src="assets/download.png" // Use the dynamic image source prop
+            alt="download"
+            className=" flex w-[100px] h-[100px] ml-8"
+          />
+          <button
+            className=" bg-[rgba(255, 255, 255, 0.8)] text-native-red text-lg font-bold underline rounded-full p-4 shadow-lg hover:bg-native-milk"
+            onClick={downloadPDF}
+          >
+            Download PDF
+          </button>
+        </div>
       </div>
     </Container>
   );

@@ -16,8 +16,8 @@ export const Admin = () => {
                 {/* admin */}
                 {isAdmin && <ModalAdmin />}
             </div>
-            </div>
         </div>
-        </Container>
-    );
+      </div>
+    </Container>
+  );
 };

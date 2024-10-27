@@ -21,7 +21,7 @@ export const ModalSignup = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
     // 使用验证逻辑
@@ -30,31 +30,22 @@ export const ModalSignup = () => {
     if (validate.username !== "") {
       setUsernameError(validate.username);
       return;
-    } else if (validate.password !== "") {
+    } 
+    if (validate.password !== "") {
       setPasswordError(validate.password);
       return;
-    } else {
     }
-
-    axios
-      .post(`${config.API_BASE_URL}/auth/register`, {
+    const response = await axios.post(`${config.API_BASE_URL}/auth/register`, {
         username,
         password,
       })
-      .then((response) => {
-        if (response.data.success) {
-          console.log("Register success:", response.data);
-          sessionStorage.setItem("username", username);
-          navigate("/accounts");
-        } else {
-          console.log("Register failed:", response.data);
-          setError("Invalid username or password");
-        }
-      })
-      .catch((error) => {
-        console.error("Error logging in:", error);
-        setError("An error occurred while logging in. Please try again.");
-      });
+    
+    if (response.data.success) {
+      sessionStorage.setItem("username", username);
+      navigate("/accounts");
+    } else {
+      setPasswordError(response.data.message);
+    }
   };
 
   return (
@@ -82,6 +73,7 @@ export const ModalSignup = () => {
               </p>
               <input
                 type="text"
+                placeholder="Enter your name"
                 value={username}
                 onChange={handleUsernameChange}
                 className={`w-full rounded-s h-[35px] border-none focus:outline-none pl-space-4 ${
@@ -101,6 +93,7 @@ export const ModalSignup = () => {
                   passwordError ? "border-red-500 border-2" : ""
                 }`}
                 type="password"
+                placeholder="Enter password"
                 value={password}
                 onChange={handlePasswordChange}
               />

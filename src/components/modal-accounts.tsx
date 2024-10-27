@@ -1,8 +1,8 @@
-import React from 'react';
-import AnimatedCounter from './AnimatedCounter';
-import BalanceChart from './BalanceChart';
-import TotalBalanceBox from './totalBalanceBox';
-import { IAccount } from '../type';
+import React, { useEffect, useState } from "react";
+import AnimatedCounter from "./AnimatedCounter";
+import BalanceChart from "./BalanceChart";
+import TotalBalanceBox from "./totalBalanceBox";
+import { IAccount } from "../type";
 
 type ModalAccountsProps = {
   accounts: IAccount[];
@@ -15,7 +15,11 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
   onAddAccount,
   onTopUp,
 }) => {
+  const [loadedAccounts, setLoadedAccounts] = useState<IAccount[]>([]);
 
+  useEffect(() => {
+    setLoadedAccounts(accounts);
+  }, [accounts]);
 
   return (
     <div className="flex flex-col md:flex-row w-[90%] mx-auto bg-native-milk shadow-lg my-10 rounded-m">
@@ -24,7 +28,7 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
         <div className="font-prosto text-xxxl text-center md:text-left mb-10">
           Welcome Back, {sessionStorage.getItem("username")}!
         </div>
-        {accounts.map((account, index) => (
+        {loadedAccounts.map((account, index) => (
           <div
             key={index}
             className="flex flex-col md:flex-row w-full bg-pale-mint justify-between rounded-s items-center py-space-2 md:py-space-4 px-space-2 md:px-space-4 mb-5"
@@ -76,18 +80,18 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
       <div className="hidden md:flex flex-col md:w-[40%] items-center justify-center p-5 mt-4">
         {/* Balance Chart */}
         <div className="total-balance-chart flex justify-center items-center">
-          <BalanceChart accounts={accounts} />
+          <BalanceChart accounts={loadedAccounts} />
         </div>
         {/* Total Balance Display */}
         <div className="flex flex-col gap-6 flex-1">
           <h2 className="font-prosto text-xxl text-center mt-2">
-            Bank Accounts:  {accounts.length}
+            Bank Accounts: {loadedAccounts.length}
           </h2>
           <div className="font-prosto text-xxl text-center">
             <p className="font-prosto">
               Total Credits:
               <div className="font-prosto text-xl text-center">
-                <AnimatedCounter accounts={accounts} />
+                <AnimatedCounter accounts={loadedAccounts} />
               </div>
             </p>
           </div>
@@ -102,7 +106,7 @@ export const ModalAccounts: React.FC<ModalAccountsProps> = ({
       {/* Mobile Image Section */}
       <div className="md:hidden flex flex-col justify-center items-center mt-2 w-full">
         <div className="flex justify-center items-center w-[56%]">
-          <TotalBalanceBox accounts={accounts} />
+          <TotalBalanceBox accounts={loadedAccounts} />
         </div>
         <img
           src="assets/old-person.png"

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
 import config from "../config";
+import { set } from "date-fns";
 
 var userID = sessionStorage.getItem("username");
 
@@ -25,7 +26,7 @@ export const TransferBetweenAccounts: React.FC<
           userID = sessionStorage.getItem("username");
         }
         const response = await axios.get<backEndUserAccount[]>(
-          `${config.API_BASE_URL}/api/data/user/${userID}/accounts`
+          `${config.API_BASE_URL}/user/${userID}/accounts`
         );
         for (var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
@@ -91,24 +92,21 @@ export const TransferBetweenAccounts: React.FC<
       alert("Please fill in all fields.");
     }
   };
+  const [trasferFailMessage, setTransferFailMessage] = useState<string>("");
 
-  const handleTransfer = () => {
-    axios
-      .post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
-        fromAccount: selectedAccountNumber,
-        toAccount: selectedTransferToNumber,
+  const handleTransfer = async () => {
+    var isSuccess;
+    const response = await axios.post(`${config.API_BASE_URL}/user/${userID}/transfer`, {
+        fromAccount: selectedAccount,
+        toAccount: selectedTransferTo,
         amount: Number(transferAmount),
-      })
-      .then((response) => {
-        console.log(response);
-      });
-
-    console.log("Transfer successful!");
-    console.log("From: ", selectedAccount);
-    console.log("To: ", selectedTransferTo);
-    console.log("Amount: ", transferAmount);
-    // Simulate transfer logic, 1 = success, 0 = failure
-    const isSuccess = 1;
+    })
+    if (response.data.success) {
+      isSuccess = 1;
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsPopupVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -142,6 +140,7 @@ export const TransferBetweenAccounts: React.FC<
             </div>
             <div className="w-full h-l bg-gray-200 flex items-center justify-between px-space-4 relative">
               <button
+                data-testid="select-account-from"
                 className={`w-full text-left ${
                   selectedAccount ? "text-black" : "text-grey-800"
                 }`}
@@ -179,6 +178,7 @@ export const TransferBetweenAccounts: React.FC<
               </div>
               <div className="w-full h-l bg-gray-200 rounded flex items-center justify-between px-space-4 relative">
                 <button
+                  data-testid="select-account-to"
                   className={`w-full text-left ${
                     selectedAccount ? "text-black" : "text-grey-800"
                   }`}
@@ -249,6 +249,7 @@ export const TransferBetweenAccounts: React.FC<
         <TransferResultModal
           show={isResultVisible}
           status={transferStatus}
+          message={trasferFailMessage}
           handleClose={handleClose}
         />
       </div>

@@ -5,6 +5,8 @@ import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { backEndUserAccount } from "../type";
+import config from "../config";
+import { set } from "date-fns";
 
 interface BPayProps {
   accounts: IAccount[];
@@ -52,21 +54,30 @@ export const BPay: React.FC<BPayProps> = () => {
       alert("Please fill in all fields.");
     }
   };
-
+  const [transferFailMessage, setTransferFailMessage] = useState<string>("");
   // Simulate the transfer process and show result modal
-  const handleTransfer = () => {
-    console.log("accountNumber: ", selectedAccountNumber);
-    axios.post(`http://localhost:3001/user/${username}/BPAY`,null,{
+  const handleTransfer = async () => {
+    var isSuccess;
+    console.log("fromAccount: ", selectedAccount, "biller: ", billerName, "amount: ", transferAmount);
+    while (username === null) {
+      username = sessionStorage.getItem("username");
+    }
+    const response = await axios.post(`${config.API_BASE_URL}/user/${username}/BPAY`, null, {
       params: {
         username: username,
-        accountNumber: selectedAccountNumber,
+        accountName: selectedAccount,
         amount: Number(transferAmount),
         billerCode: billerCode,
         companyName: billerName,
         referenceNumber: referenceNumber,
       }
     });
-    const isSuccess = 1; // Randomly simulate success or failure
+    if (response.data.success){
+      isSuccess = 1; // Randomly simulate success or failure
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsConfirmationVisible(false); // Close confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show result modal
@@ -98,7 +109,7 @@ export const BPay: React.FC<BPayProps> = () => {
         while (username === null) {
           username = sessionStorage.getItem("username");
         }
-        const response = await axios.get<backEndUserAccount[]>(`http://localhost:3001/user/${username}/accounts`);
+        const response = await axios.get<backEndUserAccount[]>(`${config.API_BASE_URL}/user/${username}/accounts`);
         for(var i = 0; i < Math.min(response.data.length, 5); i++) {
           accounts.push({
             name: response.data[i].accountName,
@@ -237,6 +248,7 @@ export const BPay: React.FC<BPayProps> = () => {
       <TransferResultModal
         show={isResultVisible}
         status={transferStatus}
+        message={transferFailMessage}
         handleClose={handleClose}
       />
     </div>

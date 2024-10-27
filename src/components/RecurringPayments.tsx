@@ -6,19 +6,23 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import TransferResultModal from "./TransferResultModal";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { backEndUserAccount, backEndPayee } from "../type";
+import config from "../config";
 
 interface RecurringPaymentsProps {
   accounts: IAccount[];
 }
 
-export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
-  accounts,
-}) => {
-  const existingPayees = ["Payee1", "Payee2"];
+var username = sessionStorage.getItem("username");
+
+export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({}) => {
+  const [existingPayees, setExistingPayees] = useState<backEndPayee[]>([]);
   const frequencyOption = ["Every week", "Every fortnight", "Every 6 months"];
   const [selectedAccount, setSelectedAccount] = useState<string>("");
   const [selectedTransferTo, setSelectedTransferTo] = useState<string>("");
   const [transferAmount, setTransferAmount] = useState<string>("");
+  const [previousDate, setPreviousDate] = useState<Date | null>(null);
 
   const [startDate, setStartDate] = useState<Date | null>(null); // 使用 Date 对象
   const [endDate, setEndDate] = useState<Date | null>(null); // 使用 Date 对象
@@ -55,6 +59,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
 
   const handleFrequencyChange = (frequency: string) => {
     setSelectedFrequency(frequency);
+    setIsFrequencyToDropdownOpen(false);
   };
 
   const handleConfirm = () => {
@@ -71,10 +76,32 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
       alert("Please fill in all fields.");
     }
   };
-
+  const [transferFailMessage, setTransferFailMessage] = useState<string>("");
+ 
+ 
   // Handle the actual transfer process
-  const handleTransfer = () => {
-    const isSuccess = 1; // Randomly simulate success or failure
+  const handleTransfer = async () => {
+    while (username == null) {
+      username = sessionStorage.getItem("username");
+    }
+    var isSuccess;
+    const response = await axios.post(
+      `${config.API_BASE_URL}/user/${username}/recurring-payment`,
+      {
+        username: username,
+        accountName: selectedAccount,
+        amount: Number(transferAmount),
+        startDate: startDate,
+        endDate: endDate,
+        frequency: selectedFrequency
+      }
+    );
+    if (response.data.success) {
+      isSuccess = 1; // Randomly simulate success or failure
+    } else {
+      isSuccess = 0;
+      setTransferFailMessage(response.data.message);
+    }
     setIsConfirmationVisible(false); // Close the confirmation modal
     setTransferStatus(isSuccess ? "success" : "fail");
     setIsResultVisible(true); // Show the result modal
@@ -95,6 +122,96 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
   const handleClose = () => {
     setIsResultVisible(false);
     navigate("/accounts"); // Redirect when user manually closes the modal
+  };
+
+  //back-end ---------------------------------------------------------------
+
+  const [accounts] = useState<IAccount[]>([]);
+  const [selectedTransferToNumber, setSelectedTransferToNumber] =
+    useState<string>("");
+  const [selectedAccountNumber, setSelectedAccountNumber] =
+    useState<string>("");
+  useEffect(() => {
+    const fetchAccounts = async () => {
+      try {
+        while (username === null) {
+          username = sessionStorage.getItem("username");
+        }
+        const response = await axios.get<backEndUserAccount[]>(
+          `${config.API_BASE_URL}/user/${username}/accounts`
+        );
+        for (var i = 0; i < Math.min(response.data.length, 5); i++) {
+          accounts.push({
+            name: response.data[i].accountName,
+            bsb: response.data[i].BSB,
+            accNo: response.data[i].accountNumber,
+            image: "null",
+            balance: response.data[i].balance.toString(),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching accounts:", error);
+      }
+    };
+    fetchAccounts();
+  }, []);
+
+  const fetchPayees = async () => {
+    while (username == null) {
+      username = sessionStorage.getItem("username");
+    }
+    const response = await axios.get(
+      `${config.API_BASE_URL}/user/${username}/getPayees`,
+      { params: { username: username } }
+    );
+    var payees = [];
+    for (var i = 0; i < response.data.length; i++) {
+      payees.push(response.data[i]);
+    }
+    setExistingPayees(payees);
+    console.log("Payees fetched successfully");
+  };
+
+  const [payeeName, setPayeeName] = useState("");
+  const [BSB, setBsb] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+
+  const handleAddPayee = async (e: React.FormEvent) => {
+    e.preventDefault();
+    while (username == null) {
+      username = sessionStorage.getItem("username");
+    }
+    const response = await axios.post(
+      `${config.API_BASE_URL}/user/${username}/addPayee`,
+      {
+        username: username,
+        payeeName: payeeName,
+        BSB: BSB,
+        accountNumber: accountNumber,
+      }
+    );
+    if (response.data.success) {
+      console.log("Payee added successfully");
+    } else {
+      console.log(response.data.message);
+    }
+    setIsNewPayee(false); // Close the popup
+    fetchPayees();
+  };
+
+
+  // Fetch existing payees from the backend
+  useEffect(() => {
+    fetchPayees();
+  }, []);
+
+  const handleAccountChangeNumber = (account: string) => {
+    setSelectedAccountNumber(account);
+    setSelectedTransferTo(""); // Reset transfer to when a new account is selected
+  };
+
+  const handleTransferToChangeNumber = (payee: string) => {
+    setSelectedTransferToNumber(payee);
   };
 
   return (
@@ -122,10 +239,14 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                     <button
                       key={account.accNo}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleAccountChange(account.name)}
+                      onClick={() => {
+                          handleAccountChange(account.name);
+                          handleAccountChangeNumber(account.accNo);
+                        }
+                      }
                     >
                       {account.name} (BSB: {account.bsb}, Account:{" "}
-                      {account.accNo})
+                      {account.accNo}, Balance: {account.balance})
                     </button>
                   ))}
                 </div>
@@ -153,11 +274,15 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 <div className="absolute top-full mt-space-2 w-full bg-white shadow-lg z-10">
                   {existingPayees.map((payee) => (
                     <button
-                      key={payee}
+                      key={payee.accountNumber}
                       className="w-full text-left px-space-4 py-space-2 hover:bg-gray-200 cursor-pointer"
-                      onClick={() => handleTransferToChange(payee)}
+                      onClick={() => {
+                        handleTransferToChange(payee.payeeName);
+                        handleTransferToChangeNumber(payee.accountNumber);
+                        console.log("payeeNumber: ", payee.accountNumber);
+                      }}
                     >
-                      {payee}
+                      {payee.payeeName}
                     </button>
                   ))}
                 </div>
@@ -168,7 +293,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
             <button
               className="bg-native-red text-white text-sm font-medium font-['Poppins'] py-space-2 px-space-6 rounded-full hover:bg-orange-600"
               onClick={() => setIsNewPayee(true)} // Show the popup
-              disabled={!selectedAccount}
+              //disabled={!selectedAccount}
             >
               {isNewPayee ? "Pay existing payee?" : "Pay someone new?"}
             </button>
@@ -189,6 +314,8 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                   type="text"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholder="Enter payee name"
+                  value={payeeName}
+                  onChange={(e) => setPayeeName(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -197,6 +324,8 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                   type="text"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholder="Enter BSB number"
+                  value={BSB}
+                  onChange={(e) => setBsb(e.target.value)}
                 />
               </div>
               <div className="mb-4">
@@ -207,11 +336,14 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                   type="text"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholder="Enter account number"
+                  value={accountNumber}
+                  onChange={(e) => setAccountNumber(e.target.value)}
                 />
               </div>
               <button
                 type="submit"
                 className="bg-native-red text-white py-2 px-4 rounded-full font-medium font-['Poppins'] hover:bg-orange-600"
+                onClick={handleAddPayee}
               >
                 Save Payee
               </button>
@@ -244,10 +376,11 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 </div>
                 <DatePicker
                   selected={startDate}
-                  onChange={(date: Date | null) => setStartDate(date)} // 确保类型是 Date | null
+                  onChange={(date: Date | null) => setStartDate(date)} // Ensuring type is Date | null
                   dateFormat="dd/MM/yyyy"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
                   placeholderText="Select start date"
+                  minDate={new Date()} // Sets the minimum selectable date to today
                   disabled={!selectedAccount}
                 />
               </div>
@@ -257,10 +390,11 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
                 </div>
                 <DatePicker
                   selected={endDate}
-                  onChange={(date: Date | null) => setEndDate(date)} // 修改为 Date | null
+                  onChange={(date: Date | null) => setEndDate(date)} // Ensuring type is Date | null
                   dateFormat="dd/MM/yyyy"
                   className="w-full h-l bg-gray-200 rounded px-space-4 py-space-2"
-                  placeholderText="Select end date"
+                  placeholderText="Select start date"
+                  minDate={new Date()} // Sets the minimum selectable date to today
                   disabled={!selectedAccount}
                 />
               </div>
@@ -324,6 +458,7 @@ export const RecurringPayments: React.FC<RecurringPaymentsProps> = ({
       <TransferResultModal
         show={isResultVisible}
         status={transferStatus}
+        message={transferFailMessage}
         handleClose={handleClose}
       />
     </div>

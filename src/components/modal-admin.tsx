@@ -1,20 +1,38 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { User, UserDisplay } from "../type";
-import GreetingSection from "./GreetingSection";
-import { validateCredentials } from "./ValidateInfo";
 import config from "../config";
 
 const fetchUserData = async (): Promise<UserDisplay[]> => {
   const response = await axios.get<User[]>(`${config.API_BASE_URL}/user`);
-  return response.data
-    .filter((user) => user.isAdmin === false)
-    .map((user, index) => ({
-      id: index + 1,
-      username: user.username,
-      password: user.password,
-      date: String(user.date),
-    }));
+  const users = response.data.filter((user) => user.isAdmin === false);
+
+  const usersWithRemainingDays = await Promise.all(
+    users.map(async (user, index) => {
+      const remainingDays = await fetchRemainingDays(user.username);
+      return {
+        id: index + 1,
+        username: user.username,
+        password: user.password,
+        date: remainingDays,
+      };
+    })
+  );
+  return usersWithRemainingDays;
+};
+
+const fetchRemainingDays = async (username: string): Promise<string> => {
+  const remainingDaysData = await axios.get<number>(
+    `${config.API_BASE_URL}/user/${username}/getExpireStatus`,
+    { params: { username } }
+  );
+  var remainingDays: string;
+  if (remainingDaysData.data > 0) {
+    remainingDays = `${remainingDaysData.data} days left`;
+  } else {
+    remainingDays = "expired";
+  }
+  return remainingDays;
 };
 
 export const ModalAdmin = () => {
@@ -35,9 +53,8 @@ export const ModalAdmin = () => {
 
   const deleteUser = async (username: string) => {
     try {
-      const prevUsers = [...usersData];
       // Make API request to delete the user from the backend
-      await axios.delete(`${config.API_BASE_URL}/users/${username}`);
+      await axios.delete(`${config.API_BASE_URL}/user/${username}`);
       // Filter out the deleted user from the local state
       setUsersData((prevUsers) =>
         prevUsers.filter((user) => user.username !== username)
@@ -149,7 +166,9 @@ export const ModalAdmin = () => {
               <th className="w-1/5 py-3 text-center">ID</th>
               <th className="w-1/5 py-3 text-center">Username</th>
               <th className="w-1/5 py-3 text-center">Password</th>
-              <th className="w-1/5 py-3 text-center">Account Creation Date</th>
+              <th className="w-1/5 py-3 text-center">
+                Remaining Date on account
+              </th>
               <th className="w-1/5 py-3 text-center">Delete</th>
             </tr>
           </thead>
@@ -160,7 +179,7 @@ export const ModalAdmin = () => {
                 <td className="w-1/5 py-3 text-center">{user.username}</td>
                 <td className="w-1/5 py-3 text-center">{user.password}</td>
                 <td className="w-1/5 py-3 text-center">{user.date}</td>
-                <td className="flex py-3 justify-center">
+                <td className="w-1/5 py-3 text-center">
                   <button
                     className="border border-solid border-native-red bg-native-red/40 text-native-red px-3 py-2 rounded-m"
                     onClick={() => deleteUser(user.username)}
