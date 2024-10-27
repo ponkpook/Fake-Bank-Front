@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { User, UserDisplay } from "../type";
-import GreetingSection from "./GreetingSection";
-import { validateCredentials } from "./ValidateInfo";
 import config from "../config";
 
 const fetchUserData = async (): Promise<UserDisplay[]> => {
@@ -23,8 +21,9 @@ const fetchUserData = async (): Promise<UserDisplay[]> => {
   return usersWithRemainingDays;
 };
 
-const fetchRemainingDays = async (username:string): Promise<string> => {
-  const remainingDaysData = await axios.get<number>(`${config.API_BASE_URL}/user/${username}/getExpireStatus`,
+const fetchRemainingDays = async (username: string): Promise<string> => {
+  const remainingDaysData = await axios.get<number>(
+    `${config.API_BASE_URL}/user/${username}/getExpireStatus`,
     { params: { username } }
   );
   var remainingDays: string;
@@ -34,8 +33,8 @@ const fetchRemainingDays = async (username:string): Promise<string> => {
     remainingDays = "expired";
   }
   return remainingDays;
-}
-  
+};
+
 export const ModalAdmin = () => {
   const [usersData, setUsersData] = useState<UserDisplay[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -54,7 +53,6 @@ export const ModalAdmin = () => {
 
   const deleteUser = async (username: string) => {
     try {
-      const prevUsers = [...usersData];
       // Make API request to delete the user from the backend
       await axios.delete(`${config.API_BASE_URL}/user/${username}`);
       // Filter out the deleted user from the local state
@@ -197,7 +195,7 @@ export const ModalAdmin = () => {
       <div className="flex justify-between items-center mt-4">
         <span className="text-sm text-gray-700 font-prosto">
           Showing data {indexOfFirstUser + 1} to {indexOfLastUser} of{" "}
-          {users.length} entries
+          {usersData.length} entries
         </span>
         <div className="inline-flex space-x-1">{renderPageNumbers()}</div>
       </div>
