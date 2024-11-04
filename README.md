@@ -22,7 +22,7 @@ This project is a front-end application simulating a bank's services, including 
 /assets
 /src
 ├── components
-|─-__tests__
+├   ├──__tests__
 ├── pages
 └── App.tsx
 ```
