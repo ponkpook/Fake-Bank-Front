@@ -60,8 +60,8 @@ This project is a front-end application simulating a bank's services, including 
    ```
 
 3. **Project Startup**:
-   • Ensure all dependencies are installed.
-   • Run yarn start to launch the project on the local development server.
+   - Ensure all dependencies are installed.
+   - Run yarn start to launch the project on the local development server.
 
 ### 5. Environment Variables
 
