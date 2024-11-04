@@ -10,14 +10,16 @@
 
 ---
 
-### 1. Project Overview
+### Project Overview
 
-> This project is a front-end application simulating a bank's services, including user login, registration, account views, and transaction history. The application is built using ReactJS and Tailwind CSS.
+This project is a front-end application simulating a bank's services, including user login, registration, account views, and transaction history. The application is built using ReactJS and Tailwind CSS.
 
-### 2. Directory Structure
+---
+
+### Directory Structure
 
 ```
-/assets # Static assets
+/assets
 /src
 ├── components
 |─-__tests__
@@ -25,33 +27,43 @@
 └── App.tsx
 ```
 
-### 3. Tech Stack & Dependencies
+### Tech Stack & Dependencies
 
 - **Framework**: ReactJS
 - **Styling**: Tailwind CSS
 - **API Requests**: Axios
-- **Additional Libraries**: React Router, Chart.js, Datepicker, jsPDF
+- **Additional Libraries**:
+  - `React Router`: For routing
+  - `Chart.js` & `react-chartjs-2`: For charting and data visualization
+  - `Datepicker`: For date selection in forms
+  - `jsPDF`: For generating PDF reports
 
-### 4. Installation & Setup
+### Installation & Setup
 
-Simply install dependencies and start project
+1. **Node Version Requirement**: Node.js version >= 16.20.0
 
-Node version >= 16.20.0
+2. **Install Dependencies**:
+   Run the following commands to set up the project:
 
-```
-yarn
+   ```
+   # Install core dependencies
+   yarn
 
-yarn add -D tailwindcss
+   # Install TailwindCSS as a development dependency
+   yarn add -D tailwindcss
 
-yarn add react-countup react-chartjs-2 chart.js react-bootstrap bootstrap
+   # Install additional required packages
+   yarn add react-countup react-chartjs-2 chart.js react-bootstrap bootstrap react-datepicker jspdf
 
-yarn add react-datepicker
+   # Start the development server
+   yarn start
+   ```
 
-yarn add jspdf
-
-yarn start
-```
+3. **Project Startup**:
+   • Ensure all dependencies are installed.
+   • Run yarn start to launch the project on the local development server.
 
 ### 5. Environment Variables
 
+Create a .env file in the root directory to store environment-specific variables.
 REACT_APP_API_BASE_URL=https://fake-bank-back-kmv3.onrender.com
