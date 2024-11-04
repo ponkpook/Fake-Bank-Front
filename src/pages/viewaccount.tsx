@@ -14,7 +14,7 @@ export const Viewaccount = () => {
     while (userID === null) {
       userID = sessionStorage.getItem("username");
     }
-    if (userID === "admin1") {
+    if (userID === "admin1" || userID === "admin2" || userID === "admin3") {
       setIsAdmin(true);
     } else {
       setIsAdmin(false);
